@@ -1,0 +1,66 @@
+image: node:19-alpine
+variables:
+  FF_USE_FASTZIP: 'true'
+  PROJECT_PATH: '$CI_PROJECT_DIR'
+  APP_OUTPUT_PATH: '$CI_PROJECT_DIR/dist/develop-platform-webapp'
+  npm_config_cache: '$CI_PROJECT_DIR/.npm'
+  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+  CDN_DISTRIBUTION_ID: $CDN_DISTRIBUTION_ID
+  AWS_REGION: $AWS_REGION
+
+cache:
+  untracked: true
+  policy: push
+  key: ${CI_COMMIT_SHORT_SHA}
+  paths:
+    - node_modules/
+
+.pull_cached_node_modules:
+  cache:
+    untracked: true
+    key: ${CI_COMMIT_SHORT_SHA}
+    policy: pull
+
+stages:
+  - setup
+  # - test
+  - build
+  - deploy
+
+install:
+  stage: setup
+  script:
+    - npm ci
+
+#Build
+build:
+  stage: build
+  extends: .pull_cached_node_modules
+  only:
+    - main
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - $APP_OUTPUT_PATH
+
+# Deploy
+deploy:
+  image: python:latest
+  stage: deploy
+  dependencies:
+    - build
+  only:
+    - main
+  script:
+    - echo "$AWS_ACCESS_KEY_ID"
+    - echo "$AWS_SECRET_ACCESS_KEY"
+    - echo "$CDN_DISTRIBUTION_ID"
+    - echo "$AWS_REGION"
+    - pip install awscli
+    - cd dist/develop-platform-webapp
+    - ls -la
+    - aws configure list
+    - aws s3 sync --delete . s3://develop-platform-webapp
+    - aws cloudfront create-invalidation --distribution-id $CDN_DISTRIBUTION_ID --paths "/*"

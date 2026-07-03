@@ -1,0 +1,197 @@
+@if (isLoading() && !dashboardData()) {
+  <div class="dashboard-empty">
+    <mat-icon>sync</mat-icon>
+    <div class="dashboard-empty__title">Carregando...</div>
+  </div>
+} @else if (!dashboardData()) {
+  <div class="dashboard-empty">
+    <mat-icon>dashboard</mat-icon>
+    <div class="dashboard-empty__title">Sem dados de dashboard</div>
+    <div class="dashboard-empty__subtitle">Aguarde o processamento da consulta.</div>
+  </div>
+} @else {
+  <div class="dialog-container">
+    <section class="kpi-row">
+      <div class="kpi-card">
+        <span class="label">Total Frota</span>
+        <span class="value">{{ dashboardData()?.totalItems | number }}</span>
+      </div>
+      <div class="kpi-card">
+        <span class="label">Consultas</span>
+        <span class="value">{{ dashboardData()?.totalItems | number }}</span>
+        <span class="sub-info">Erros: {{ dashboardData()?.errorCount | number }}</span>
+      </div>
+      <div class="kpi-card">
+        <span class="label">Alertas Totais</span>
+        <span class="value">{{ alertsTotal() | number }}</span>
+        <span class="sub-info percent">{{ percentLabel(alertsTotal()) }}</span>
+      </div>
+      <div class="kpi-card">
+        <span class="label">Multas Totais</span>
+        <span class="value">{{ dashboardData()?.fined?.total | number }}</span>
+        <span class="sub-info percent">{{ percentLabel(dashboardData()?.fined?.total) }}</span>
+      </div>
+    </section>
+
+    <section class="status-grid">
+      <div class="status-card liberado">
+        <div class="card-header">
+          <div class="card-header-top">
+            <div class="card-title">
+              <mat-icon>verified</mat-icon>
+              <span>LIBERADOS</span>
+            </div>
+            <div class="main-val">
+              <span class="total-num">{{ dashboardData()?.unblocked?.total | number }}</span>
+              <span class="percentage-total">{{ percentLabel(dashboardData()?.unblocked?.total) }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="section-label">Alertas de Atenção</span>
+          <div class="chip-grid">
+            @for (alert of alertGroups(); track alert.label; let idx = $index) {
+              <div class="data-chip alert-item" [class.zero]="!alert.total">
+                <div class="chip-content">
+                  <span class="chip-acronym">A.{{ formatIndex(idx) }}</span>
+                  <span class="chip-description">{{ alert.label }}</span>
+                </div>
+                <span class="chip-val">{{ alert.total | number }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="status-card bloqueado">
+        <div class="card-header">
+          <div class="card-header-top">
+            <div class="card-title">
+              <mat-icon>block</mat-icon>
+              <span>BLOQUEADOS</span>
+            </div>
+            <div class="main-val">
+              <span class="total-num">{{ blockedTotal() | number }}</span>
+              <span class="percentage-total">{{ percentLabel(blockedTotal()) }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="section-label">Ocorrências de Bloqueio</span>
+          <div class="chip-grid">
+            @for (block of blockGroups(); track block.label; let idx = $index) {
+              <div class="data-chip block-item" [class.zero]="!block.total">
+                <div class="chip-content">
+                  <span class="chip-acronym">B.{{ formatIndex(idx) }}</span>
+                  <span class="chip-description">{{ block.label }}</span>
+                </div>
+                <span class="chip-val">{{ block.total | number }}</span>
+              </div>
+            }
+          </div>
+          <span class="section-label block-alerts-label">Alertas de Atenção</span>
+          <div class="chip-grid">
+            @for (alert of alertGroups(); track alert.label; let idx = $index) {
+              <div class="data-chip alert-item" [class.zero]="!alert.total">
+                <div class="chip-content">
+                  <span class="chip-acronym">A.{{ formatIndex(idx) }}</span>
+                  <span class="chip-description">{{ alert.label }}</span>
+                </div>
+                <span class="chip-val">{{ alert.total | number }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="fines-row">
+      <div class="fines-card">
+        <div class="card-title fines-card__label">
+          <mat-icon>payments</mat-icon>
+          <span>Multas pendentes</span>
+        </div>
+        <div class="fines-card__value">{{ dashboardData()?.fined?.total | number }}</div>
+      </div>
+      <div class="fines-card">
+        <div class="card-title fines-card__label">
+          <mat-icon>error_outline</mat-icon>
+          <span>Erros na consulta</span>
+        </div>
+        <div class="fines-card__value">{{ dashboardData()?.errorCount | number }}</div>
+      </div>
+    </section>
+
+    <section class="regional-row">
+      <div class="table-wrap">
+        <div class="table-header">
+          <h3 class="card-title">
+            <mat-icon>map</mat-icon>
+            <span>Liberados por Região</span>
+          </h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>UF</th>
+              <th class="tr">Veículos</th>
+              <th class="tr">Multas</th>
+              <th class="tr">Alertas</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of unblockedStateRows(); track row.state) {
+              <tr>
+                <td>{{ row.state }}</td>
+                <td class="tr">{{ row.total | number }}</td>
+                <td class="tr">{{ row.fines | number }}</td>
+                <td class="tr">{{ row.alerts | number }}</td>
+              </tr>
+            }
+            <tr class="row-bold">
+              <td>TOTAL</td>
+              <td class="tr">{{ unblockedTotals().total | number }}</td>
+              <td class="tr">{{ unblockedTotals().fines | number }}</td>
+              <td class="tr">{{ unblockedTotals().alerts | number }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-header">
+          <h3 class="card-title">
+            <mat-icon>map</mat-icon>
+            <span>Bloqueados por Região</span>
+          </h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>UF</th>
+              <th class="tr">Veículos</th>
+              <th class="tr">Multas</th>
+              <th class="tr">Alertas</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of blockedStateRows(); track row.state) {
+              <tr>
+                <td>{{ row.state }}</td>
+                <td class="tr">{{ row.total | number }}</td>
+                <td class="tr">{{ row.fines | number }}</td>
+                <td class="tr">{{ row.alerts | number }}</td>
+              </tr>
+            }
+            <tr class="row-bold">
+              <td>TOTAL</td>
+              <td class="tr">{{ blockedTotals().total | number }}</td>
+              <td class="tr">{{ blockedTotals().fines | number }}</td>
+              <td class="tr">{{ blockedTotals().alerts | number }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+}

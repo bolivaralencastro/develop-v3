@@ -1,0 +1,204 @@
+:host {
+  display: block;
+}
+
+.page-header {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  padding: 1.25rem 16px;
+}
+
+.page-header h1,
+.page-header h2 {
+  text-box-trim: trim-start;
+  text-box-edge: cap;
+  padding-bottom: 0;
+}
+
+@media (min-width: 640px) {
+  .page-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.dashboard-header {
+  flex-wrap: nowrap;
+  gap: 16px;
+}
+
+.dashboard-title {
+  line-height: 36px;
+  white-space: nowrap;
+  display: flex;
+  gap: 6px;
+}
+
+.dashboard-welcome {
+  color: var(--fuse-text-secondary);
+  font-weight: 600;
+}
+
+.dashboard-title-text {
+  color: var(--fuse-text-default);
+}
+
+.dashboard-filter-row {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.dashboard-range-select {
+  min-width: 200px;
+  margin: 0;
+
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+
+  .mat-mdc-form-field-flex {
+    height: 36px;
+    align-items: center;
+  }
+
+  .mat-mdc-text-field-wrapper {
+    padding: 0 8px;
+  }
+
+  .mat-mdc-select-trigger {
+    height: 100%;
+    align-items: center;
+  }
+
+  .mat-mdc-select-value {
+    display: flex;
+    align-items: center;
+  }
+
+  .mat-mdc-select-arrow-wrapper {
+    align-items: center;
+  }
+
+  .mat-mdc-form-field-infix {
+    padding: 0;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+  }
+
+  input {
+    font-size: 12px;
+  }
+}
+
+.dashboard-range-label {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  line-height: 1;
+}
+
+.dashboard-range-hidden {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chart-card {
+  display: flex;
+  flex-direction: column;
+  height: 380px;
+  overflow: hidden;
+}
+
+.chart-content {
+  height: 100%;
+  width: 100%;
+
+  &.chart-content--centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// ── Skeleton shimmer ──────────────────────────────────────────────────────────
+
+@keyframes shimmer {
+  0% {
+    background-position: -600px 0;
+  }
+  100% {
+    background-position: 600px 0;
+  }
+}
+
+.skeleton-line,
+.skeleton-block {
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 1200px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-line {
+  height: 12px;
+}
+
+.skeleton-kpi-card {
+  min-height: 96px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.skeleton-chart-card {
+  display: flex;
+  flex-direction: column;
+  height: 380px;
+  overflow: hidden;
+
+  .skeleton-block {
+    flex: 1;
+    border-radius: 6px;
+  }
+}
+
+.skeleton-region-card {
+  overflow: hidden;
+}
+
+.skeleton-region-header {
+  padding: 16px 24px 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.skeleton-region-body {
+  padding: 0;
+}
+
+.skeleton-region-th {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.skeleton-region-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.skeleton-region-total {
+  background: #f8fafc;
+}

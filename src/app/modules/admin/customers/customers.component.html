@@ -1,0 +1,102 @@
+<page-title title="Clientes">
+  <button mat-icon-button matTooltip="Novo" class="ml-auto" (click)="createCustomer()">
+    <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+  </button>
+</page-title>
+
+<div class="mx-4 mb-4 flex flex-col bg-card rounded-lg shadow overflow-hidden grow">
+  <!-- Filter -->
+  <div class="filter-bar">
+    <div class="h-12 flex items-center gap-3 grow">
+      <mat-icon class="icon-size-5 mt-0.5" [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
+      <input
+        class="w-full"
+        [formControl]="searchInputControl"
+        matInput
+        [autocomplete]="'off'"
+        placeholder="Pesquisar..."
+      />
+    </div>
+    <mat-form-field subscriptSizing="dynamic" class="min-w-32">
+      <mat-select [formControl]="activeFilterControl">
+        <mat-option value="all">Todos</mat-option>
+        <mat-option value="active">Ativo</mat-option>
+        <mat-option value="inactive">Inativo</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Table -->
+  <div class="grow overflow-x-auto min-w-0 flex">
+    <mat-table [dataSource]="customers()" class="grow">
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef class="min-w-28 max-w-28">Status</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="min-w-28 max-w-28">
+          <app-customer-status-tag [active]="element?.active" />
+        </mat-cell>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef class="min-w-48">{{ 'name' | transloco }}</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="min-w-48">{{ element.name }}</mat-cell>
+      </ng-container>
+
+      <!-- Description Column -->
+      <ng-container matColumnDef="description">
+        <mat-header-cell *matHeaderCellDef class="min-w-56 max-w-56">Descrição</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="min-w-56 max-w-56">{{ element.description || '-' }}</mat-cell>
+      </ng-container>
+
+      <!-- Created At Column -->
+      <ng-container matColumnDef="createdAt">
+        <mat-header-cell *matHeaderCellDef class="min-w-32 max-w-32">Criado em</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="min-w-32 max-w-32">{{ element.createdAt | date: 'dd/MM/yyyy' }}</mat-cell>
+      </ng-container>
+
+      <!-- Menu Column -->
+      <ng-container matColumnDef="menu">
+        <mat-header-cell *matHeaderCellDef class="min-w-32 max-w-32"></mat-header-cell>
+        <mat-cell *matCellDef="let element" class="min-w-32 max-w-32 justify-end">
+          <div class="flex gap-1">
+            @if (isAdmin()) {
+              <button mat-icon-button matTooltip="Alterar para cliente" (click)="switchTenant(element)">
+                <mat-icon>swap_horiz</mat-icon>
+              </button>
+            }
+            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Mais opções">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="updateCustomer(element)">{{ 'edit' | transloco }}</button>
+              <button mat-menu-item (click)="deleteCustomer(element)">{{ 'delete' | transloco }}</button>
+            </mat-menu>
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <div *matNoDataRow class="no-data-row">
+        <mat-icon class="text-gray-300 w-16 h-16" [svgIcon]="'heroicons_outline:building-office-2'"></mat-icon>
+        <span class="text-xl font-medium text-gray-400">{{ 'there-are-no-customers' | transloco }}</span>
+      </div>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+  </div>
+
+  <!-- Paginator -->
+  @let pageMeta = pagination();
+  <mat-paginator
+    class="border-t"
+    [ngClass]="{ 'pointer-events-none': isLoading() }"
+    [length]="pageMeta?.totalItems"
+    [pageIndex]="pageMeta?.currentPage - 1"
+    [pageSize]="pageMeta?.itemsPerPage"
+    [pageSizeOptions]="[10, 20, 50, 100]"
+    [showFirstLastButtons]="true"
+    [disabled]="!customers()?.length"
+    (page)="onPageChange($event)"
+  ></mat-paginator>
+</div>

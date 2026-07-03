@@ -1,0 +1,197 @@
+<div class="page-header bg-transparent">
+  <div class="dashboard-header flex w-full items-center justify-between">
+    <h2 class="dashboard-title text-3xl font-extrabold tracking-tight">
+      <span class="dashboard-welcome">Bem-vindo ao</span>
+      <span class="dashboard-title-text">Develop</span>
+    </h2>
+    <div class="dashboard-filter-row flex items-center gap-2 text-sm text-secondary">
+      <span class="dashboard-range-label">Período</span>
+      <mat-form-field class="dashboard-range-select" appearance="outline" subscriptSizing="dynamic">
+        <mat-select [value]="preset" (selectionChange)="onPresetChange($event.value)">
+          <mat-option value="30">Últimos 30 dias</mat-option>
+          <mat-option value="7">Últimos 7 dias</mat-option>
+          <mat-option value="today">Hoje</mat-option>
+          <mat-option value="custom">Personalizado</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div class="dashboard-range-hidden">
+        <mat-form-field appearance="outline">
+          <mat-date-range-input [rangePicker]="picker" [formGroup]="range">
+            <input matStartDate placeholder="Início" formControlName="start" (dateChange)="onCustomDateChange()" />
+            <input matEndDate placeholder="Fim" formControlName="end" (dateChange)="onCustomDateChange()" />
+          </mat-date-range-input>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mx-4 mb-4 grid gap-4 lg:grid-cols-12">
+
+  <!-- KPIs -->
+  @if (loading()) {
+    <div class="col-span-12 grid grid-cols-2 gap-4 lg:grid-cols-6">
+      @for (i of skeletonKpis; track i) {
+        <div class="skeleton-kpi-card bg-card rounded-lg border border-gray-200 p-4 shadow">
+          <div class="skeleton-line w-3/4 mb-3"></div>
+          <div class="skeleton-line w-1/2 mb-3" style="height: 24px;"></div>
+          <div class="skeleton-line w-2/4"></div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="col-span-12 grid grid-cols-2 gap-4 lg:grid-cols-6">
+      @for (kpi of kpis(); track kpi.id) {
+        <app-kpi-card [label]="kpi.label" [value]="kpi.value" [subLabel]="kpi.subLabel" />
+      }
+    </div>
+  }
+
+  <!-- Charts -->
+  @if (loading()) {
+    <div class="col-span-12 lg:col-span-4">
+      <div class="skeleton-chart-card bg-card rounded-lg border border-gray-200 p-4 shadow">
+        <div class="skeleton-line w-2/5 mb-4"></div>
+        <div class="skeleton-block"></div>
+      </div>
+    </div>
+    <div class="col-span-12 lg:col-span-4">
+      <div class="skeleton-chart-card bg-card rounded-lg border border-gray-200 p-4 shadow">
+        <div class="skeleton-line w-2/5 mb-4"></div>
+        <div class="skeleton-block"></div>
+      </div>
+    </div>
+    <div class="col-span-12 lg:col-span-4">
+      <div class="skeleton-chart-card bg-card rounded-lg border border-gray-200 p-4 shadow">
+        <div class="skeleton-line w-2/5 mb-4"></div>
+        <div class="skeleton-block"></div>
+      </div>
+    </div>
+  } @else {
+    <div class="col-span-12 lg:col-span-4">
+      <div class="bg-card chart-card rounded-lg border border-gray-200 p-4 shadow">
+        <div class="text-sm font-semibold">Consultas e veículos por dia</div>
+        <div class="chart-content mt-4">
+          <apx-chart
+            [chart]="queriesChart().chart"
+            [colors]="queriesChart().colors"
+            [dataLabels]="queriesChart().dataLabels"
+            [grid]="queriesChart().grid"
+            [legend]="queriesChart().legend"
+            [series]="queriesChart().series"
+            [stroke]="queriesChart().stroke"
+            [tooltip]="queriesChart().tooltip"
+            [xaxis]="queriesChart().xaxis"
+            [yaxis]="queriesChart().yaxis"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-span-12 lg:col-span-4">
+      <div class="bg-card chart-card rounded-lg border border-gray-200 p-4 shadow">
+        <div class="text-sm font-semibold">Status das consultas</div>
+        <div class="chart-content chart-content--centered mt-4">
+          <apx-chart
+            [chart]="statusChart().chart"
+            [colors]="statusChart().colors"
+            [dataLabels]="statusChart().dataLabels"
+            [labels]="statusChart().labels"
+            [legend]="statusChart().legend"
+            [plotOptions]="statusChart().plotOptions"
+            [series]="statusChart().series"
+            [stroke]="statusChart().stroke"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-span-12 lg:col-span-4">
+      <div class="bg-card chart-card rounded-lg border border-gray-200 p-4 shadow">
+        <div class="text-sm font-semibold">Motivos de bloqueio</div>
+        <div class="chart-content mt-4">
+          <apx-chart
+            [chart]="blocksChart().chart"
+            [colors]="blocksChart().colors"
+            [dataLabels]="blocksChart().dataLabels"
+            [grid]="blocksChart().grid"
+            [plotOptions]="blocksChart().plotOptions"
+            [series]="blocksChart().series"
+            [tooltip]="blocksChart().tooltip"
+            [xaxis]="blocksChart().xaxis"
+            [yaxis]="blocksChart().yaxis"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Region tables -->
+  @if (loading()) {
+    <div class="col-span-12 lg:col-span-6">
+      <div class="skeleton-region-card bg-card rounded-lg border border-gray-200 shadow overflow-hidden">
+        <div class="skeleton-region-header">
+          <div class="skeleton-line w-1/3"></div>
+        </div>
+        <div class="skeleton-region-body">
+          <div class="skeleton-region-th">
+            @for (i of [0,1,2,3]; track i) {
+              <div class="skeleton-line" [style.width]="i === 0 ? '30%' : '15%'"></div>
+            }
+          </div>
+          @for (row of skeletonRows; track row) {
+            <div class="skeleton-region-row">
+              <div class="skeleton-line" style="width: 30%;"></div>
+              <div class="skeleton-line" style="width: 15%;"></div>
+              <div class="skeleton-line" style="width: 15%;"></div>
+              <div class="skeleton-line" style="width: 15%;"></div>
+            </div>
+          }
+          <div class="skeleton-region-row skeleton-region-total">
+            <div class="skeleton-line" style="width: 30%; height: 14px;"></div>
+            <div class="skeleton-line" style="width: 15%; height: 14px;"></div>
+            <div class="skeleton-line" style="width: 15%; height: 14px;"></div>
+            <div class="skeleton-line" style="width: 15%; height: 14px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-span-12 lg:col-span-6">
+      <div class="skeleton-region-card bg-card rounded-lg border border-gray-200 shadow overflow-hidden">
+        <div class="skeleton-region-header">
+          <div class="skeleton-line w-1/3"></div>
+        </div>
+        <div class="skeleton-region-body">
+          <div class="skeleton-region-th">
+            @for (i of [0,1,2,3]; track i) {
+              <div class="skeleton-line" [style.width]="i === 0 ? '30%' : '15%'"></div>
+            }
+          </div>
+          @for (row of skeletonRows; track row) {
+            <div class="skeleton-region-row">
+              <div class="skeleton-line" style="width: 30%;"></div>
+              <div class="skeleton-line" style="width: 15%;"></div>
+              <div class="skeleton-line" style="width: 15%;"></div>
+              <div class="skeleton-line" style="width: 15%;"></div>
+            </div>
+          }
+          <div class="skeleton-region-row skeleton-region-total">
+            <div class="skeleton-line" style="width: 30%; height: 14px;"></div>
+            <div class="skeleton-line" style="width: 15%; height: 14px;"></div>
+            <div class="skeleton-line" style="width: 15%; height: 14px;"></div>
+            <div class="skeleton-line" style="width: 15%; height: 14px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="col-span-12 lg:col-span-6">
+      <app-region-table title="Liberados por Região" icon="verified" [rows]="unblockedByRegion()" />
+    </div>
+    <div class="col-span-12 lg:col-span-6">
+      <app-region-table title="Bloqueados por Região" icon="block" [rows]="blockedByRegion()" />
+    </div>
+  }
+
+</div>

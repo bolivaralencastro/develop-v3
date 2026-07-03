@@ -1,0 +1,190 @@
+{
+  "customers": "Clientes",
+  "new": "Novo",
+  "new-batch": "Nova Consulta",
+  "search-clients": "procurar por clientes...",
+  "there-are-no-customers": "Nenhum cliente cadastrado!",
+  "edit": "Editar",
+  "delete": "Deletar",
+  "remove": "Remover",
+  "cancel": "Cancelar",
+  "save": "Salvar",
+  "active": "Ativo",
+  "name": "Nome",
+  "details": "Detalhes",
+  "close": "Fechar",
+  "confirm-remove-customer-title": "Remover cliente",
+  "confirm-remove-customer-message": "Tem certeza de que deseja remover este cliente? Essa ação não pode ser desfeita!",
+  "create-customer-title": "Novo cliente",
+  "plate": "Placa",
+  "chassis": "Chassi",
+  "renavam": "Renavam",
+  "state": "Estado",
+  "dashboard": {
+    "title": "Dashboard",
+    "vehicles-total": "Total de veículos",
+    "queries-total": "Consultas realizadas",
+    "unblocked-vehicles": "Veículos liberados",
+    "blocked-vehicles": "Veículos bloqueados",
+    "fined-vehicles": "Veículos multados",
+    "alerts": "Alertas",
+    "blocked": "Bloqueios"
+  },
+  "dashboard-weekly-chart": {
+    "title": "Resumo de consultas",
+    "chart-label": "Nesta semana",
+    "overview-label": "Bloqueios",
+    "queries-by-day": "Consultas por dia",
+    "week-days-label": "Seg-Ter-Qua-Qui-Sex-Sab-Dom",
+    "block-type": {
+      "icms": "Benefício ICMS",
+      "active-sale": "Venda ativa",
+      "finance-reserve": "Res. financiamento",
+      "manufacturer-medium-damage": "Dano media monta.",
+      "invalid-csv": "CSV inválido",
+      "administrative-unavailability-accident": "Indisp. admin. / acidente / grande monta.",
+      "theft-occurrence": "Ocorrência ou queixa de furto / roubo",
+      "out-of-circulation": "Fora de circulação",
+      "fiscal-benefit": "Benefício fiscal"
+    }
+  },
+  "pre-sales": {
+    "search": "Pesquisar...",
+    "resume": "Resumo",
+    "filter": {
+      "category": "Categoria",
+      "type": "Tipo"
+    },
+    "query-category": {
+      "fleet": "Fleet",
+      "rac": "RAC",
+      "free": "Livre"
+    },
+    "query-type": {
+      "pre-sales": "Pré-venda",
+      "quarterly": "Trimestral",
+      "special": "Especial"
+    },
+    "table": {
+      "name": "Nome",
+      "customId": "ID",
+      "status": "Status da Consulta",
+      "totalRecords": "Registros",
+      "totalProcessed": "Processados",
+      "successCount": "Sucessos",
+      "errorCount": "Erros",
+      "progress": "Progresso",
+      "createdDate": "Data",
+      "category": "Categoria",
+      "type": "Tipo"
+    },
+    "upload-dialog": {
+      "title": "Nova consulta",
+      "upload-success-title": "Consulta criada com sucesso",
+      "new-query": "Nova consulta",
+      "send": "Enviar",
+      "download-sample": "Baixar modelo",
+      "default-upload-error-message": "Ocorreu um erro ao enviar o arquivo, tente novamente em alguns instantes."
+    },
+    "upload-form": {
+      "select-file-label": "Arraste o arquivo até aqui ou clique para selecionar",
+      "supported-formats": "Formatos suportados"
+    },
+    "upload-result": {
+      "success-label": "O lote de veículos será processado em breve.",
+      "file-details": "Estatísticas do arquivo",
+      "errors": "Erros",
+      "go-to-batch": "Visualizar lote",
+      "line": "Linha",
+      "total-vehicles": "Total de veículos",
+      "total-errors": "Total de erros"
+    },
+    "list": {
+      "no-batches": "Nenhum lote encontrado"
+    },
+    "details": {
+      "title": "Estatísticas",
+      "vehicles": "Veículos",
+      "errors": "Erros",
+      "processed": "Processados",
+      "succeeded": "Sucessos",
+      "already-registered": "Já cadastrados",
+      "progress": "Progresso"
+    },
+    "vehicle-history": {
+      "status": "Status",
+      "fines-status": "Multas",
+      "gravame-status": "Gravame",
+      "recall-status": "Recall",
+      "owner": "Proprietário",
+      "lineNumber": "Linha",
+      "placa": "Placa",
+      "renavam": "Renavam",
+      "state": "Estado",
+      "licensing": "Licenciamento",
+      "ipva": "IPVA",
+      "vehicle": "Veículo",
+      "chassi": "Chassi",
+      "no-vehicles": "Nenhum veículo encontrado para o lote",
+      "import-error": "Erro na importação",
+      "situation": "Situação"
+    },
+    "status-tag": {
+      "pending": "Pendente",
+      "processing": "Iniciado",
+      "completed": "Concluído",
+      "error": "Erro"
+    },
+    "import-history-vehicle-status": {
+      "success": "Sucesso",
+      "processing": "Processando",
+      "error": "Erro",
+      "started": "Aguardando"
+    },
+    "situations": {
+      "alert": "Alerta",
+      "blocked": "Bloqueado",
+      "unblocked": "Liberado"
+    }
+  },
+  "vehicles": {
+    "table": {
+      "queryId": "Última Consulta",
+      "queryDate": "Data Consulta",
+      "brandModel": "Modelo",
+      "modelYear": "Ano",
+      "manufactureYear": "Fabricação",
+      "color": "Cor",
+      "numberPlate": "Placa",
+      "state": "Estado",
+      "city": "Cidade",
+      "nextSearchDate": "Próxima consulta",
+      "no-vehicles": "Nenhum veículo encontrado"
+    },
+    "vehicle-features": {
+      "numberPlate": "Placa",
+      "chassi": "Chassi",
+      "renavam": "Renavam",
+      "model": "Modelo",
+      "modelYear": "Ano modelo",
+      "manufactureYear": "Ano fabricação",
+      "city": "Cidade",
+      "color": "Cor",
+      "uf": "UF",
+      "error_message": "Mensagem de erro",
+      "category": "Categoria",
+      "type": "Tipo",
+      "fuelType": "Combustível",
+      "passengers": "Passageiros",
+      "last_licensing": "Ultimo licenciamento"
+    }
+  },
+  "paginator": {
+    "items-per-page": "Itens por página",
+    "next-page": "Próxima página",
+    "previous-page": "Página anterior",
+    "first-page": "Primeira página",
+    "last-page": "Última página",
+    "range": "{{start}} – {{end}} de {{total}}"
+  }
+}
