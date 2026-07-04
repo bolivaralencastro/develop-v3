@@ -74,6 +74,7 @@ export type PreSaleImportHistoryVehicleResponseDto = {
     id: string;
     numberPlate: string;
     renavam: string;
+    state?: string;
     estate: string;
   };
 };

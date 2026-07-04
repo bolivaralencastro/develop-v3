@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { DevelopHttpClient } from '@core/http';
 import { delay, Observable, of } from 'rxjs';
 import { DashboardDataDTO } from '../models';
+import { environment } from '@environment';
 
 const MOCK_DATA = {
   totalItems: 1500,
@@ -68,12 +69,35 @@ export class DashboardApi {
 
   fetchDashboardData(importHistoryId?: string) {
     const api = importHistoryId ? `${this.API}/${importHistoryId}` : this.API;
+    if ((environment as any).mockAuth) {
+      return of(this.buildMockDashboard(importHistoryId)).pipe(delay(200));
+    }
     return this.http.get<any>(api);
   }
 
   fetchDashboardDataV2(importHistoryId: string): Observable<DashboardDataDTO> {
     const api = importHistoryId ? `${this.API}/${importHistoryId}` : this.API;
+    if ((environment as any).mockAuth) {
+      return of(this.buildMockDashboard(importHistoryId)).pipe(delay(200));
+    }
     return this.http.get<any>(api);
-    //return of(MOCK_DATA).pipe(delay(1500));
+  }
+
+  private buildMockDashboard(importHistoryId?: string): DashboardDataDTO {
+    const suffix = importHistoryId?.split('-').at(-1)?.toUpperCase() ?? '001';
+    return {
+      ...MOCK_DATA,
+      queryId: `MOCK-${suffix}`,
+      queryDate: '2026-07-03T10:00:00Z',
+      blockedByState: {
+        total: 100,
+        groups: [
+          { label: 'MG', total: 35 },
+          { label: 'SP', total: 28 },
+          { label: 'PR', total: 21 },
+          { label: 'RJ', total: 16 },
+        ],
+      },
+    };
   }
 }
