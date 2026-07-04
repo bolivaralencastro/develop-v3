@@ -10,9 +10,9 @@ import { MultaDto, MultaFilter } from '../models/multa.types';
 import { MultasService } from '../services/multas.service';
 
 const TIPO_LABELS: Record<string, string> = {
-  IMPOSTAS: 'Multas › Impostas',
-  NOTIFICADAS: 'Multas › Notificadas',
-  TODAS: 'Multas › Todas as Multas',
+  IMPOSTAS: 'Impostas',
+  NOTIFICADAS: 'Notificadas',
+  TODAS: 'Todas as Multas',
 };
 
 @Component({
@@ -80,7 +80,8 @@ export class MultasListComponent implements OnInit {
 
   ngOnInit() {
     this.tipo = this.route.snapshot.data['tipo'] ?? 'TODAS';
-    this.pageTitle = TIPO_LABELS[this.tipo] ?? 'Multas';
+    const titlePrefix = this.route.snapshot.data['titlePrefix'] ?? 'Multas';
+    this.pageTitle = `${titlePrefix} › ${TIPO_LABELS[this.tipo] ?? 'Todas as Multas'}`;
     this.multasService.setTipo(this.tipo);
   }
 

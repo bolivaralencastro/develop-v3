@@ -1,8 +1,9 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
+import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
 import { QueryDashboardDataService } from '../services';
 import { QueryDashboardContentComponent } from './query-dashboard-content/query-dashboard-content.component';
@@ -66,8 +67,12 @@ type QueryDashboardData = {
       </mat-dialog-content>
 
       <mat-dialog-actions class="query-dashboard-footer" align="end">
-        <button mat-stroked-button class="query-dashboard-secondary-action">Visualizar veículos com alertas</button>
-        <button mat-flat-button class="query-dashboard-primary-action">Tratar bloqueios pendentes</button>
+        <button mat-stroked-button class="query-dashboard-secondary-action" (click)="openAlertVehicles()">
+          Visualizar veículos com alertas
+        </button>
+        <button mat-flat-button class="query-dashboard-primary-action" (click)="openBlockedVehicles()">
+          Tratar bloqueios pendentes
+        </button>
       </mat-dialog-actions>
     </div>
   `,
@@ -171,7 +176,9 @@ type QueryDashboardData = {
 })
 export class QueryDashboardComponent {
   protected readonly data = inject<QueryDashboardData>(MAT_DIALOG_DATA);
+  private readonly dialogRef = inject(MatDialogRef<QueryDashboardComponent>);
   private readonly dashboardService = inject(QueryDashboardDataService);
+  private readonly router = inject(Router);
   protected readonly dashboardData = this.dashboardService.dashboardData;
   protected readonly ids = this.data.ids ?? [this.data.importHistoryId];
   protected currentIndex = this.data.index ?? 0;
@@ -209,6 +216,16 @@ export class QueryDashboardComponent {
 
     this.currentIndex += 1;
     this.updateCurrentId();
+  }
+
+  protected openAlertVehicles() {
+    this.router.navigate(['/veiculos/liberados-alerta']);
+    this.dialogRef.close();
+  }
+
+  protected openBlockedVehicles() {
+    this.router.navigate(['/veiculos/bloqueados']);
+    this.dialogRef.close();
   }
 
   private updateCurrentId() {

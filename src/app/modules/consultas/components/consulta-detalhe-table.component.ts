@@ -11,17 +11,20 @@ import { ConsultaDetalheDto, ConsultaDetalheType } from '../models/consulta.type
 
 export const DETALHE_COLUMN_DEFS: Record<ConsultaDetalheType, TableColumnDef[]> = {
   SITUACAO_VEICULO: [
+    { key: 'lote', label: 'Lote' }, { key: 'origemConsulta', label: 'Consulta' }, { key: 'categoriaConsulta', label: 'Categoria' },
     { key: 'placa', label: 'Placa' }, { key: 'renavam', label: 'Renavam' },
     { key: 'chassi', label: 'Chassi' }, { key: 'estado', label: 'Estado' },
     { key: 'descricaoSituacao', label: 'Situação no Detran' },
   ],
   RECALL: [
+    { key: 'lote', label: 'Lote' }, { key: 'origemConsulta', label: 'Consulta' }, { key: 'categoriaConsulta', label: 'Categoria' },
     { key: 'placa', label: 'Placa' }, { key: 'renavam', label: 'Renavam' },
     { key: 'chassi', label: 'Chassi' }, { key: 'estado', label: 'Estado' },
     { key: 'situacaoRecall', label: 'Situação Recall' }, { key: 'campanhaRecall', label: 'Campanha' },
     { key: 'componente', label: 'Componente' }, { key: 'descricaoRecall', label: 'Descrição do Recall' },
   ],
   GNV: [
+    { key: 'lote', label: 'Lote' }, { key: 'origemConsulta', label: 'Consulta' }, { key: 'categoriaConsulta', label: 'Categoria' },
     { key: 'placa', label: 'Placa' }, { key: 'renavam', label: 'Renavam' },
     { key: 'chassi', label: 'Chassi' }, { key: 'estado', label: 'Estado' },
     { key: 'possuiGnv', label: 'GNV' }, { key: 'numeroLaudo', label: 'N° Laudo' },
@@ -29,6 +32,7 @@ export const DETALHE_COLUMN_DEFS: Record<ConsultaDetalheType, TableColumnDef[]> 
     { key: 'situacaoGnv', label: 'Situação GNV' }, { key: 'empresaInstaladora', label: 'Empresa Instaladora' },
   ],
   GRAVAME: [
+    { key: 'lote', label: 'Lote' }, { key: 'origemConsulta', label: 'Consulta' }, { key: 'categoriaConsulta', label: 'Categoria' },
     { key: 'placa', label: 'Placa' }, { key: 'renavam', label: 'Renavam' },
     { key: 'chassi', label: 'Chassi' }, { key: 'estado', label: 'Estado' },
     { key: 'possuiGravame', label: 'Gravame' }, { key: 'credor', label: 'Credor' },
@@ -36,18 +40,21 @@ export const DETALHE_COLUMN_DEFS: Record<ConsultaDetalheType, TableColumnDef[]> 
     { key: 'dataInclusao', label: 'Data Inclusão' }, { key: 'dataVencimentoGravame', label: 'Vencimento' },
   ],
   PROPRIETARIO: [
+    { key: 'lote', label: 'Lote' }, { key: 'origemConsulta', label: 'Consulta' }, { key: 'categoriaConsulta', label: 'Categoria' },
     { key: 'placa', label: 'Placa' }, { key: 'renavam', label: 'Renavam' },
     { key: 'chassi', label: 'Chassi' }, { key: 'estado', label: 'Estado' },
     { key: 'nomeProprietario', label: 'Nome do Proprietário' }, { key: 'cpfCnpj', label: 'CPF / CNPJ' },
     { key: 'dataTransferencia', label: 'Data Transferência' }, { key: 'situacaoTransferencia', label: 'Situação' },
   ],
   CRLV: [
+    { key: 'lote', label: 'Lote' }, { key: 'origemConsulta', label: 'Consulta' }, { key: 'categoriaConsulta', label: 'Categoria' },
     { key: 'placa', label: 'Placa' }, { key: 'renavam', label: 'Renavam' },
     { key: 'chassi', label: 'Chassi' }, { key: 'estado', label: 'Estado' },
     { key: 'ultimoExercicio', label: 'Último Exercício' }, { key: 'situacaoCrlv', label: 'Situação CRLV' },
     { key: 'dataEmissao', label: 'Data de Emissão' },
   ],
   IPVA: [
+    { key: 'lote', label: 'Lote' }, { key: 'origemConsulta', label: 'Consulta' }, { key: 'categoriaConsulta', label: 'Categoria' },
     { key: 'placa', label: 'Placa' }, { key: 'renavam', label: 'Renavam' },
     { key: 'chassi', label: 'Chassi' }, { key: 'estado', label: 'Estado' },
     { key: 'exercicioIpva', label: 'Exercício' }, { key: 'valorIpva', label: 'Valor Total' },
@@ -55,6 +62,7 @@ export const DETALHE_COLUMN_DEFS: Record<ConsultaDetalheType, TableColumnDef[]> 
     { key: 'valorPago', label: 'Valor Pago' },
   ],
   LICENCIAMENTO: [
+    { key: 'lote', label: 'Lote' }, { key: 'origemConsulta', label: 'Consulta' }, { key: 'categoriaConsulta', label: 'Categoria' },
     { key: 'placa', label: 'Placa' }, { key: 'renavam', label: 'Renavam' },
     { key: 'chassi', label: 'Chassi' }, { key: 'estado', label: 'Estado' },
     { key: 'exercicioLicenciamento', label: 'Exercício' }, { key: 'valorTaxa', label: 'Taxa' },
@@ -126,6 +134,21 @@ function badgeTooltip(value: string | undefined): string {
     <div class="grow flex">
       @let dataSet = items() ?? [];
       <mat-table [dataSource]="dataSet" class="grow">
+
+        <ng-container matColumnDef="lote">
+          <mat-header-cell *matHeaderCellDef class="min-w-28">Lote</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="min-w-28 font-mono text-sm">{{ r.lote ?? '—' }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="origemConsulta">
+          <mat-header-cell *matHeaderCellDef class="min-w-28">Consulta</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="min-w-28 text-sm font-medium">{{ r.origemConsulta ?? '—' }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="categoriaConsulta">
+          <mat-header-cell *matHeaderCellDef class="min-w-28">Categoria</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="min-w-28 text-sm">{{ r.categoriaConsulta ?? '—' }}</mat-cell>
+        </ng-container>
 
         <!-- placa -->
         <ng-container matColumnDef="placa">

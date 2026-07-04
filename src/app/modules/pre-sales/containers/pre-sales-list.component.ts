@@ -1,6 +1,6 @@
-import { Component, inject, Signal, signal } from '@angular/core';
+import { Component, inject, OnInit, Signal, signal } from '@angular/core';
 import { PRE_SALES_TABLE_COLUMNS, PreSalesTableComponent } from '../components/pre-sales-table.component';
-import { PreSaleImportHistoryResponseDto, PreSalesFilter } from '../models/pre-sales.types';
+import { PRE_SALE_QUERY_TYPE, PreSaleImportHistoryResponseDto, PreSalesFilter } from '../models/pre-sales.types';
 import { TranslocoModule } from '@ngneat/transloco';
 import { NgClass } from '@angular/common';
 import { PreSalesListService } from '../services/pre-sales-list.service';
@@ -14,6 +14,7 @@ import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { HeaderBatchDialogService } from '@core/services/header-batch-dialog.service';
 import { QueryDashboardService } from '../../dashboard/services/query-dashboard.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-batches',
@@ -30,7 +31,7 @@ import { QueryDashboardService } from '../../dashboard/services/query-dashboard.
     MatTooltip,
   ],
   template: `
-    <page-title title="Consultas">
+    <page-title [title]="pageTitle">
       <button mat-icon-button matTooltip="Nova Consulta" class="ml-auto" (click)="openBatchDialog()">
         <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
       </button>
@@ -39,8 +40,9 @@ import { QueryDashboardService } from '../../dashboard/services/query-dashboard.
     <div class="mx-4 mb-4 flex flex-col bg-card rounded-lg shadow overflow-hidden grow">
       <app-pre-sales-filter
         class="w-full"
-        storageKey="pre-sales-table-columns"
+        [storageKey]="storageKey"
         [columns]="columnDefs"
+        [lockedQueryType]="lockedQueryType"
         (filterChange)="onFilterChange($event)"
         (visibleColumnsChange)="visibleColumns.set($event)">
       </app-pre-sales-filter>
@@ -76,9 +78,14 @@ import { QueryDashboardService } from '../../dashboard/services/query-dashboard.
     }
   `,
 })
-export class PreSalesListComponent {
+export class PreSalesListComponent implements OnInit {
+  private readonly route = inject(ActivatedRoute);
+
   protected readonly columnDefs = PRE_SALES_TABLE_COLUMNS;
   protected readonly visibleColumns = signal<string[]>(PRE_SALES_TABLE_COLUMNS.map(c => c.key));
+  protected pageTitle = 'Consultas';
+  protected storageKey = 'pre-sales-table-columns';
+  protected lockedQueryType: PRE_SALE_QUERY_TYPE | null = null;
 
   protected readonly isLoading: Signal<boolean>;
   protected readonly batches: Signal<PreSaleImportHistoryResponseDto[]>;
@@ -92,6 +99,16 @@ export class PreSalesListComponent {
     this.batches = this.preSalesListService.batches;
     this.isLoading = this.preSalesListService.isLoading;
     this.pagination = this.preSalesListService.pagination;
+  }
+
+  ngOnInit() {
+    this.pageTitle = this.route.snapshot.data['title'] ?? 'Consultas';
+    this.storageKey = this.route.snapshot.data['storageKey'] ?? 'pre-sales-table-columns';
+    this.lockedQueryType = this.route.snapshot.data['lockedQueryType'] ?? null;
+
+    if (this.lockedQueryType) {
+      this.preSalesListService.setFilter({ queryType: [this.lockedQueryType] });
+    }
   }
 
   onPageChange(event: PageEvent) {
@@ -114,6 +131,9 @@ export class PreSalesListComponent {
   }
 
   protected onFilterChange(filter: PreSalesFilter) {
-    this.preSalesListService.setFilter(filter);
+    this.preSalesListService.setFilter({
+      ...filter,
+      queryType: this.lockedQueryType ? [this.lockedQueryType] : filter.queryType,
+    });
   }
 }

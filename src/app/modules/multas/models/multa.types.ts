@@ -6,6 +6,9 @@ export type MultaDto = {
   renavam: string;
   chassi: string;
   estado: string;
+  lote?: string;
+  origemConsulta?: string;
+  categoriaConsulta?: string;
   numeroMulta: string;
   situacao: MultaSituacao;
   dataInfracao: string;

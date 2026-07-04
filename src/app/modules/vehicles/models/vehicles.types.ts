@@ -28,6 +28,9 @@ export type VehicleDto = {
   id: string;
   renavam: string;
   chassi: string;
+  lote?: string;
+  origemConsulta?: string;
+  categoriaConsulta?: string;
   brandModel: string;
   modelYear: number;
   manufactureYear: number;

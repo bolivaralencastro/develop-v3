@@ -6,6 +6,9 @@ export type ConsultaVehicleDto = {
   renavam: string;
   chassi: string;
   estado: string;
+  lote?: string;
+  origemConsulta?: string;
+  categoriaConsulta?: string;
   status: ConsultaVehicleStatus;
   alerta: boolean;
   situacaoVeiculo: string;
@@ -52,6 +55,9 @@ export type ConsultaDetalheDto = {
   renavam: string;
   chassi: string;
   estado: string;
+  lote?: string;
+  origemConsulta?: string;
+  categoriaConsulta?: string;
   // Situação do Veículo
   descricaoSituacao?: string;
   // Recall

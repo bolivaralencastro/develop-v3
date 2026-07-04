@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
-import { ConsultaTotalComponent } from './containers/consulta-total.component';
 import { ConsultaDetalheComponent } from './containers/consulta-detalhe.component';
-import { ConsultaPlaceholderComponent } from './containers/consulta-placeholder.component';
+import { PreSalesListComponent } from '../pre-sales/containers/pre-sales-list.component';
+import { PreSalesDetailComponent } from '../pre-sales/containers/pre-sales-detail.component';
+import { MultasListComponent } from '../multas/containers/multas-list.component';
 
 export default [
   { path: '', redirectTo: 'total/pre-venda', pathMatch: 'full' },
@@ -9,9 +10,51 @@ export default [
     path: 'total',
     children: [
       { path: '', redirectTo: 'pre-venda', pathMatch: 'full' },
-      { path: 'pre-venda', component: ConsultaTotalComponent, data: { queryType: 'PRE_VENDA' } },
-      { path: 'trimestral', component: ConsultaTotalComponent, data: { queryType: 'TRIMESTRAL' } },
-      { path: 'especial', component: ConsultaTotalComponent, data: { queryType: 'ESPECIAL' } },
+      {
+        path: 'pre-venda',
+        children: [
+          {
+            path: '',
+            component: PreSalesListComponent,
+            data: {
+              title: 'Consultas › Total › Pré-venda',
+              storageKey: 'consultas-total-pre-venda-columns',
+              lockedQueryType: 'PRE_SALES',
+            },
+          },
+          { path: ':id', component: PreSalesDetailComponent, data: { title: 'Consultas › Total › Pré-venda' } },
+        ],
+      },
+      {
+        path: 'trimestral',
+        children: [
+          {
+            path: '',
+            component: PreSalesListComponent,
+            data: {
+              title: 'Consultas › Total › Trimestral',
+              storageKey: 'consultas-total-trimestral-columns',
+              lockedQueryType: 'QUARTERLY',
+            },
+          },
+          { path: ':id', component: PreSalesDetailComponent, data: { title: 'Consultas › Total › Trimestral' } },
+        ],
+      },
+      {
+        path: 'especial',
+        children: [
+          {
+            path: '',
+            component: PreSalesListComponent,
+            data: {
+              title: 'Consultas › Total › Especial',
+              storageKey: 'consultas-total-especial-columns',
+              lockedQueryType: 'SPECIAL',
+            },
+          },
+          { path: ':id', component: PreSalesDetailComponent, data: { title: 'Consultas › Total › Especial' } },
+        ],
+      },
     ],
   },
   { path: 'situacao-veiculo', component: ConsultaDetalheComponent, data: { consulType: 'SITUACAO_VEICULO' } },
@@ -26,9 +69,9 @@ export default [
     path: 'multas',
     children: [
       { path: '', redirectTo: 'impostas', pathMatch: 'full' },
-      { path: 'impostas', component: ConsultaPlaceholderComponent, data: { title: 'Consultas › Multas › Impostas' } },
-      { path: 'notificadas', component: ConsultaPlaceholderComponent, data: { title: 'Consultas › Multas › Notificadas' } },
-      { path: 'todas', component: ConsultaPlaceholderComponent, data: { title: 'Consultas › Multas › Todas' } },
+      { path: 'impostas', component: MultasListComponent, data: { tipo: 'IMPOSTAS', titlePrefix: 'Consultas › Multas' } },
+      { path: 'notificadas', component: MultasListComponent, data: { tipo: 'NOTIFICADAS', titlePrefix: 'Consultas › Multas' } },
+      { path: 'todas', component: MultasListComponent, data: { tipo: 'TODAS', titlePrefix: 'Consultas › Multas' } },
     ],
   },
 ] as Routes;

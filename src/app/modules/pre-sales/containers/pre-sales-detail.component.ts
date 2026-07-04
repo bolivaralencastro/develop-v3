@@ -37,7 +37,7 @@ import { PreSalesDetailService } from '../services/pre-sales-detail.service';
     VehicleDetailPanelComponent,
   ],
   template: `
-    <page-title [title]="'pre-sales.details.vehicles' | transloco" [hasBackButton]="true" (goBack)="onGoBack()">
+    <page-title [title]="pageTitle" [hasBackButton]="true" (goBack)="onGoBack()">
       <app-pre-sale-history [stats]="stats()" (openDashboard)="openDashboard()"/>
     </page-title>
 
@@ -113,6 +113,7 @@ export class PreSalesDetailComponent {
   protected readonly vehiclesPagination: Signal<PageMeta>;
   protected readonly selectedVehicleId = signal<string | null>(null);
   protected readonly currentImportHistoryId = signal<string | null>(null);
+  protected pageTitle = 'Consultas';
   private readonly destroyRef = inject(DestroyRef);
   readonly stateFilter = input<string | undefined>(undefined, { alias: 'state' });
   readonly situationFilter = input<string | undefined>(undefined, { alias: 'situation' });
@@ -132,6 +133,7 @@ export class PreSalesDetailComponent {
     this.isLoadingVehicles = detailService.isLoadingVehicles;
     this.vehiclesPagination = detailService.vehiclesPagination;
     this.currentFilter = detailService.vehiclesFilter;
+    this.pageTitle = this.activatedRoute.snapshot.data['title'] ?? 'Consultas';
     this.registerRouteChangeListener();
     this.registerFilterValuesChanges();
   }

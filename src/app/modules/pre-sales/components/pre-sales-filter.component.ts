@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, output } from '@angular/core';
 import { PRE_SALE_QUERY_CATEGORY, PRE_SALE_QUERY_TYPE, PreSalesFilter } from '../models/pre-sales.types';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
@@ -90,6 +90,7 @@ export class PreSalesFilterComponent {
 
   columns = input<TableColumnDef[]>([]);
   storageKey = input.required<string>();
+  lockedQueryType = input<PRE_SALE_QUERY_TYPE | null>(null);
   filterChange = output<PreSalesFilter>();
   visibleColumnsChange = output<string[]>();
 
@@ -98,6 +99,7 @@ export class PreSalesFilterComponent {
 
   constructor() {
     this.buildForm();
+    effect(() => this.applyLockedType());
     this.registerChangesListener();
   }
 
@@ -113,5 +115,16 @@ export class PreSalesFilterComponent {
     this.form.valueChanges
       .pipe(debounceTime(200), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe((value) => this.filterChange.emit(value));
+  }
+
+  private applyLockedType() {
+    const lockedType = this.lockedQueryType();
+
+    if (!lockedType) {
+      return;
+    }
+
+    this.form.controls.queryType.setValue([lockedType], { emitEvent: false });
+    this.form.controls.queryType.disable({ emitEvent: false });
   }
 }

@@ -3,11 +3,11 @@ import { PageMeta } from '@core/http';
 import { ConsultaDetalheDto, ConsultaDetalheFilter, ConsultaDetalheType } from '../models/consulta.types';
 
 const BASE = [
-  { id: '1', placa: 'TCW2B26', renavam: '1408440137', chassi: '988675ADDSKV17591', estado: 'MG' },
-  { id: '2', placa: 'TCW7F19', renavam: '1409138825', chassi: '9886111LGSK637125', estado: 'MG' },
-  { id: '3', placa: 'TCW2B28', renavam: '1408440153', chassi: '988675ADDSKV18067', estado: 'MG' },
-  { id: '4', placa: 'SET3I95', renavam: '1358691549', chassi: '95PDEM61DRB024102', estado: 'PR' },
-  { id: '5', placa: 'UEK4G37', renavam: '1462415803', chassi: 'LGWEFUA5XSH957057', estado: 'SP' },
+  { id: '1', placa: 'TCW2B26', renavam: '1408440137', chassi: '988675ADDSKV17591', estado: 'MG', lote: 'PS-240601', origemConsulta: 'Pré-venda', categoriaConsulta: 'Fleet' },
+  { id: '2', placa: 'TCW7F19', renavam: '1409138825', chassi: '9886111LGSK637125', estado: 'MG', lote: 'PS-240601', origemConsulta: 'Pré-venda', categoriaConsulta: 'Fleet' },
+  { id: '3', placa: 'TCW2B28', renavam: '1408440153', chassi: '988675ADDSKV18067', estado: 'MG', lote: 'TR-240522', origemConsulta: 'Trimestral', categoriaConsulta: 'RAC' },
+  { id: '4', placa: 'SET3I95', renavam: '1358691549', chassi: '95PDEM61DRB024102', estado: 'PR', lote: 'ESP-240510', origemConsulta: 'Especial', categoriaConsulta: 'Livre' },
+  { id: '5', placa: 'UEK4G37', renavam: '1462415803', chassi: 'LGWEFUA5XSH957057', estado: 'SP', lote: 'TR-240515', origemConsulta: 'Trimestral', categoriaConsulta: 'RAC' },
 ];
 
 const MOCK: Record<ConsultaDetalheType, ConsultaDetalheDto[]> = {
