@@ -69,9 +69,9 @@ export default [
     path: 'multas',
     children: [
       { path: '', redirectTo: 'impostas', pathMatch: 'full' },
-      { path: 'impostas', component: MultasListComponent, data: { tipo: 'IMPOSTAS', titlePrefix: 'Consultas › Multas' } },
-      { path: 'notificadas', component: MultasListComponent, data: { tipo: 'NOTIFICADAS', titlePrefix: 'Consultas › Multas' } },
-      { path: 'todas', component: MultasListComponent, data: { tipo: 'TODAS', titlePrefix: 'Consultas › Multas' } },
+      { path: 'impostas', component: MultasListComponent, data: { tipo: 'IMPOSTAS', titlePrefix: 'Consultas › Multas', summary: true } },
+      { path: 'notificadas', component: MultasListComponent, data: { tipo: 'NOTIFICADAS', titlePrefix: 'Consultas › Multas', summary: true } },
+      { path: 'todas', component: MultasListComponent, data: { tipo: 'TODAS', titlePrefix: 'Consultas › Multas', summary: true } },
     ],
   },
 ] as Routes;

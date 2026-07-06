@@ -9,110 +9,63 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { TableColumnDef } from 'app/layout/common/table-column-management/table-column-management.component';
 import { ConsultaDetalheDto, ConsultaDetalheType } from '../models/consulta.types';
 
+const STATUS_COLUMN: TableColumnDef = { key: 'status', label: 'Status' };
+const BASE_COLUMNS: TableColumnDef[] = [
+  { key: 'placa', label: 'Placa' }, { key: 'renavam', label: 'Renavam' },
+  { key: 'chassi', label: 'Chassi' }, { key: 'estado', label: 'Estado' },
+];
+
 export const DETALHE_COLUMN_DEFS: Record<ConsultaDetalheType, TableColumnDef[]> = {
   SITUACAO_VEICULO: [
-    { key: 'lote', label: 'Lote' }, { key: 'origemConsulta', label: 'Consulta' }, { key: 'categoriaConsulta', label: 'Categoria' },
-    { key: 'placa', label: 'Placa' }, { key: 'renavam', label: 'Renavam' },
-    { key: 'chassi', label: 'Chassi' }, { key: 'estado', label: 'Estado' },
-    { key: 'descricaoSituacao', label: 'Situação no Detran' },
+    ...BASE_COLUMNS, STATUS_COLUMN,
+    { key: 'descricaoSituacao', label: 'Situação Veículo' },
   ],
   RECALL: [
-    { key: 'lote', label: 'Lote' }, { key: 'origemConsulta', label: 'Consulta' }, { key: 'categoriaConsulta', label: 'Categoria' },
-    { key: 'placa', label: 'Placa' }, { key: 'renavam', label: 'Renavam' },
-    { key: 'chassi', label: 'Chassi' }, { key: 'estado', label: 'Estado' },
-    { key: 'situacaoRecall', label: 'Situação Recall' }, { key: 'campanhaRecall', label: 'Campanha' },
-    { key: 'componente', label: 'Componente' }, { key: 'descricaoRecall', label: 'Descrição do Recall' },
+    ...BASE_COLUMNS, STATUS_COLUMN,
+    { key: 'recall', label: 'Recall' }, { key: 'descricaoRecall', label: 'Descrição' },
+    { key: 'dataRegistroRecall', label: 'Data Registro' }, { key: 'dataLimiteRecall', label: 'Data Limite' },
+    { key: 'situacaoRecall', label: 'Situação Recall' },
   ],
   GNV: [
-    { key: 'lote', label: 'Lote' }, { key: 'origemConsulta', label: 'Consulta' }, { key: 'categoriaConsulta', label: 'Categoria' },
-    { key: 'placa', label: 'Placa' }, { key: 'renavam', label: 'Renavam' },
-    { key: 'chassi', label: 'Chassi' }, { key: 'estado', label: 'Estado' },
-    { key: 'possuiGnv', label: 'GNV' }, { key: 'numeroLaudo', label: 'N° Laudo' },
-    { key: 'dataLaudo', label: 'Data do Laudo' }, { key: 'validadeLaudo', label: 'Validade' },
-    { key: 'situacaoGnv', label: 'Situação GNV' }, { key: 'empresaInstaladora', label: 'Empresa Instaladora' },
+    ...BASE_COLUMNS, STATUS_COLUMN,
+    { key: 'ultimoLaudoGnv', label: 'Último Laudo CSV' }, { key: 'prazoRegularizacaoGnv', label: 'Prazo para Regularização' },
+    { key: 'situacaoGnv', label: 'Situação CSV' },
   ],
   GRAVAME: [
-    { key: 'lote', label: 'Lote' }, { key: 'origemConsulta', label: 'Consulta' }, { key: 'categoriaConsulta', label: 'Categoria' },
-    { key: 'placa', label: 'Placa' }, { key: 'renavam', label: 'Renavam' },
-    { key: 'chassi', label: 'Chassi' }, { key: 'estado', label: 'Estado' },
-    { key: 'possuiGravame', label: 'Gravame' }, { key: 'credor', label: 'Credor' },
-    { key: 'agenteFinanceiro', label: 'Agente Financeiro' }, { key: 'numeroContrato', label: 'N° Contrato' },
-    { key: 'dataInclusao', label: 'Data Inclusão' }, { key: 'dataVencimentoGravame', label: 'Vencimento' },
+    ...BASE_COLUMNS, STATUS_COLUMN,
+    { key: 'gravame', label: 'Gravame' },
   ],
   PROPRIETARIO: [
-    { key: 'lote', label: 'Lote' }, { key: 'origemConsulta', label: 'Consulta' }, { key: 'categoriaConsulta', label: 'Categoria' },
-    { key: 'placa', label: 'Placa' }, { key: 'renavam', label: 'Renavam' },
-    { key: 'chassi', label: 'Chassi' }, { key: 'estado', label: 'Estado' },
-    { key: 'nomeProprietario', label: 'Nome do Proprietário' }, { key: 'cpfCnpj', label: 'CPF / CNPJ' },
-    { key: 'dataTransferencia', label: 'Data Transferência' }, { key: 'situacaoTransferencia', label: 'Situação' },
+    ...BASE_COLUMNS, STATUS_COLUMN,
+    { key: 'nomeProprietario', label: 'Proprietário' }, { key: 'cpfCnpj', label: 'CPF / CNPJ' },
   ],
   CRLV: [
-    { key: 'lote', label: 'Lote' }, { key: 'origemConsulta', label: 'Consulta' }, { key: 'categoriaConsulta', label: 'Categoria' },
-    { key: 'placa', label: 'Placa' }, { key: 'renavam', label: 'Renavam' },
-    { key: 'chassi', label: 'Chassi' }, { key: 'estado', label: 'Estado' },
-    { key: 'ultimoExercicio', label: 'Último Exercício' }, { key: 'situacaoCrlv', label: 'Situação CRLV' },
-    { key: 'dataEmissao', label: 'Data de Emissão' },
+    ...BASE_COLUMNS, STATUS_COLUMN,
+    { key: 'ultimoLicenciamento', label: 'Último Licenciamento' },
   ],
   IPVA: [
-    { key: 'lote', label: 'Lote' }, { key: 'origemConsulta', label: 'Consulta' }, { key: 'categoriaConsulta', label: 'Categoria' },
-    { key: 'placa', label: 'Placa' }, { key: 'renavam', label: 'Renavam' },
-    { key: 'chassi', label: 'Chassi' }, { key: 'estado', label: 'Estado' },
-    { key: 'exercicioIpva', label: 'Exercício' }, { key: 'valorIpva', label: 'Valor Total' },
-    { key: 'situacaoIpva', label: 'Situação IPVA' }, { key: 'dataVencimentoIpva', label: 'Vencimento' },
-    { key: 'valorPago', label: 'Valor Pago' },
+    ...BASE_COLUMNS, STATUS_COLUMN,
+    { key: 'valorIpva', label: 'IPVA' },
   ],
   LICENCIAMENTO: [
-    { key: 'lote', label: 'Lote' }, { key: 'origemConsulta', label: 'Consulta' }, { key: 'categoriaConsulta', label: 'Categoria' },
-    { key: 'placa', label: 'Placa' }, { key: 'renavam', label: 'Renavam' },
-    { key: 'chassi', label: 'Chassi' }, { key: 'estado', label: 'Estado' },
-    { key: 'exercicioLicenciamento', label: 'Exercício' }, { key: 'valorTaxa', label: 'Taxa' },
-    { key: 'situacaoLicenciamento', label: 'Situação' }, { key: 'dataVencimentoLicenciamento', label: 'Vencimento' },
+    ...BASE_COLUMNS, STATUS_COLUMN,
+    { key: 'taxaLicenciamento', label: 'Licenciamento' },
   ],
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  // Recall
-  'COM RECALL': 'bg-red-100 text-red-700',
-  'SEM RECALL': 'bg-green-100 text-green-700',
-  // GNV (possui)
-  'SIM': 'bg-blue-100 text-blue-700',
-  'NÃO': 'bg-gray-100 text-gray-500',
-  // GNV (situação)
+  // Situação Recall / GNV
   'VÁLIDO': 'bg-green-100 text-green-700',
   'VENCIDO': 'bg-red-100 text-red-700',
   'N/A': 'bg-gray-100 text-gray-400',
-  // Gravame
-  'COM GRAVAME': 'bg-amber-100 text-amber-700',
-  'SEM GRAVAME': 'bg-green-100 text-green-700',
-  // Proprietário
-  'REGULAR': 'bg-green-100 text-green-700',
-  'PENDENTE': 'bg-amber-100 text-amber-700',
-  'IRREGULAR': 'bg-red-100 text-red-700',
-  // CRLV
-  'EMITIDO': 'bg-green-100 text-green-700',
-  // IPVA / Licenciamento
-  'QUITADO': 'bg-green-100 text-green-700',
-  'PARCELADO': 'bg-blue-100 text-blue-700',
-  'ISENTO': 'bg-gray-100 text-gray-500',
+  'N/C': 'bg-gray-100 text-gray-400',
 };
 
 const STATUS_TOOLTIP: Record<string, string> = {
-  'COM RECALL': 'Recall ativo — veículo deve ser levado à concessionária',
-  'SEM RECALL': 'Sem recall pendente',
-  'SIM': 'Veículo equipado com GNV',
-  'NÃO': 'Veículo não equipado com GNV',
-  'VÁLIDO': 'Laudo GNV dentro da validade',
-  'VENCIDO': 'Laudo GNV vencido — renovação obrigatória',
+  'VÁLIDO': 'Dentro da validade',
+  'VENCIDO': 'Vencido — regularização necessária',
   'N/A': 'Não aplicável',
-  'COM GRAVAME': 'Veículo possui restrição financeira (gravame)',
-  'SEM GRAVAME': 'Nenhum gravame registrado',
-  'REGULAR': 'Situação regular junto ao Detran',
-  'PENDENTE': 'Pendente — regularização necessária',
-  'IRREGULAR': 'Irregularidade detectada',
-  'EMITIDO': 'Documento emitido',
-  'QUITADO': 'Débito quitado',
-  'PARCELADO': 'Pagamento parcelado em andamento',
-  'ISENTO': 'Isento de pagamento',
+  'N/C': 'Não consta',
 };
 
 function badgeClass(value: string | undefined): string {
@@ -134,21 +87,6 @@ function badgeTooltip(value: string | undefined): string {
     <div class="grow flex">
       @let dataSet = items() ?? [];
       <mat-table [dataSource]="dataSet" class="grow">
-
-        <ng-container matColumnDef="lote">
-          <mat-header-cell *matHeaderCellDef class="min-w-28">Lote</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-28 font-mono text-sm">{{ r.lote ?? '—' }}</mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="origemConsulta">
-          <mat-header-cell *matHeaderCellDef class="min-w-28">Consulta</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-28 text-sm font-medium">{{ r.origemConsulta ?? '—' }}</mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="categoriaConsulta">
-          <mat-header-cell *matHeaderCellDef class="min-w-28">Categoria</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-28 text-sm">{{ r.categoriaConsulta ?? '—' }}</mat-cell>
-        </ng-container>
 
         <!-- placa -->
         <ng-container matColumnDef="placa">
@@ -174,10 +112,56 @@ function badgeTooltip(value: string | undefined): string {
           <mat-cell *matCellDef="let r" class="min-w-20">{{ r.estado }}</mat-cell>
         </ng-container>
 
+        <!-- status -->
+        <ng-container matColumnDef="status">
+          <mat-header-cell *matHeaderCellDef class="min-w-20 justify-center">Status</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="min-w-20 justify-center">
+            <span
+              class="inline-flex items-center justify-center w-8 h-8 rounded-full cursor-default"
+              [ngClass]="{
+                'bg-green-100 text-green-700': r.status === 'LIBERADO',
+                'bg-red-100 text-red-700': r.status === 'BLOQUEADO'
+              }"
+              [matTooltip]="r.status === 'LIBERADO' ? 'Liberado — veículo sem restrições ativas' : 'Bloqueado — veículo com restrições ou impedimentos'"
+              matTooltipPosition="above"
+            >
+              @if (r.status === 'LIBERADO') {
+                <mat-icon class="icon-size-5" svgIcon="lucide:check-circle"></mat-icon>
+              } @else {
+                <mat-icon class="icon-size-5" svgIcon="lucide:x-circle"></mat-icon>
+              }
+            </span>
+          </mat-cell>
+        </ng-container>
+
         <!-- descricaoSituacao (Situação do Veículo) -->
         <ng-container matColumnDef="descricaoSituacao">
-          <mat-header-cell *matHeaderCellDef class="min-w-80">Situação no Detran</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef class="min-w-80">Situação Veículo</mat-header-cell>
           <mat-cell *matCellDef="let r" class="min-w-80 text-xs text-gray-700 line-clamp-2">{{ r.descricaoSituacao ?? '—' }}</mat-cell>
+        </ng-container>
+
+        <!-- recall -->
+        <ng-container matColumnDef="recall">
+          <mat-header-cell *matHeaderCellDef class="min-w-64">Recall</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="min-w-64 text-xs text-gray-700 line-clamp-2">{{ r.recall ?? '—' }}</mat-cell>
+        </ng-container>
+
+        <!-- descricaoRecall -->
+        <ng-container matColumnDef="descricaoRecall">
+          <mat-header-cell *matHeaderCellDef class="min-w-80">Descrição</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="min-w-80 text-xs text-gray-600 line-clamp-2">{{ r.descricaoRecall ?? '—' }}</mat-cell>
+        </ng-container>
+
+        <!-- dataRegistroRecall -->
+        <ng-container matColumnDef="dataRegistroRecall">
+          <mat-header-cell *matHeaderCellDef class="min-w-32">Data Registro</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="min-w-32 text-sm">{{ r.dataRegistroRecall ?? '—' }}</mat-cell>
+        </ng-container>
+
+        <!-- dataLimiteRecall -->
+        <ng-container matColumnDef="dataLimiteRecall">
+          <mat-header-cell *matHeaderCellDef class="min-w-32">Data Limite</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="min-w-32 text-sm">{{ r.dataLimiteRecall ?? '—' }}</mat-cell>
         </ng-container>
 
         <!-- situacaoRecall -->
@@ -192,57 +176,21 @@ function badgeTooltip(value: string | undefined): string {
           </mat-cell>
         </ng-container>
 
-        <!-- campanhaRecall -->
-        <ng-container matColumnDef="campanhaRecall">
-          <mat-header-cell *matHeaderCellDef class="min-w-44">Campanha</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-44 font-mono text-sm">{{ r.campanhaRecall ?? '—' }}</mat-cell>
+        <!-- ultimoLaudoGnv -->
+        <ng-container matColumnDef="ultimoLaudoGnv">
+          <mat-header-cell *matHeaderCellDef class="min-w-32">Último Laudo CSV</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="min-w-32 text-sm">{{ r.ultimoLaudoGnv ?? '—' }}</mat-cell>
         </ng-container>
 
-        <!-- componente -->
-        <ng-container matColumnDef="componente">
-          <mat-header-cell *matHeaderCellDef class="min-w-40">Componente</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-40 text-sm">{{ r.componente ?? '—' }}</mat-cell>
-        </ng-container>
-
-        <!-- descricaoRecall -->
-        <ng-container matColumnDef="descricaoRecall">
-          <mat-header-cell *matHeaderCellDef class="min-w-80">Descrição do Recall</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-80 text-xs text-gray-600 line-clamp-2">{{ r.descricaoRecall ?? '—' }}</mat-cell>
-        </ng-container>
-
-        <!-- possuiGnv -->
-        <ng-container matColumnDef="possuiGnv">
-          <mat-header-cell *matHeaderCellDef class="min-w-24 justify-center">GNV</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-24 justify-center">
-            <span class="text-xs font-semibold px-2 py-0.5 rounded-full cursor-default"
-              [ngClass]="badgeClass(r.possuiGnv)"
-              [matTooltip]="badgeTooltip(r.possuiGnv)"
-              matTooltipPosition="above"
-            >{{ r.possuiGnv }}</span>
-          </mat-cell>
-        </ng-container>
-
-        <!-- numeroLaudo -->
-        <ng-container matColumnDef="numeroLaudo">
-          <mat-header-cell *matHeaderCellDef class="min-w-40">N° Laudo</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-40 font-mono text-sm">{{ r.numeroLaudo ?? '—' }}</mat-cell>
-        </ng-container>
-
-        <!-- dataLaudo -->
-        <ng-container matColumnDef="dataLaudo">
-          <mat-header-cell *matHeaderCellDef class="min-w-32">Data do Laudo</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-32 text-sm">{{ r.dataLaudo ?? '—' }}</mat-cell>
-        </ng-container>
-
-        <!-- validadeLaudo -->
-        <ng-container matColumnDef="validadeLaudo">
-          <mat-header-cell *matHeaderCellDef class="min-w-32">Validade</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-32 text-sm">{{ r.validadeLaudo ?? '—' }}</mat-cell>
+        <!-- prazoRegularizacaoGnv -->
+        <ng-container matColumnDef="prazoRegularizacaoGnv">
+          <mat-header-cell *matHeaderCellDef class="min-w-36">Prazo para Regularização</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="min-w-36 text-sm">{{ r.prazoRegularizacaoGnv ?? '—' }}</mat-cell>
         </ng-container>
 
         <!-- situacaoGnv -->
         <ng-container matColumnDef="situacaoGnv">
-          <mat-header-cell *matHeaderCellDef class="min-w-28 justify-center">Situação GNV</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef class="min-w-28 justify-center">Situação CSV</mat-header-cell>
           <mat-cell *matCellDef="let r" class="min-w-28 justify-center">
             <span class="text-xs font-semibold px-2 py-0.5 rounded-full cursor-default"
               [ngClass]="badgeClass(r.situacaoGnv)"
@@ -252,57 +200,15 @@ function badgeTooltip(value: string | undefined): string {
           </mat-cell>
         </ng-container>
 
-        <!-- empresaInstaladora -->
-        <ng-container matColumnDef="empresaInstaladora">
-          <mat-header-cell *matHeaderCellDef class="min-w-52">Empresa Instaladora</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-52 text-sm">{{ r.empresaInstaladora ?? '—' }}</mat-cell>
-        </ng-container>
-
-        <!-- possuiGravame -->
-        <ng-container matColumnDef="possuiGravame">
-          <mat-header-cell *matHeaderCellDef class="min-w-36 justify-center">Gravame</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-36 justify-center">
-            <span class="text-xs font-semibold px-2 py-0.5 rounded-full cursor-default"
-              [ngClass]="badgeClass(r.possuiGravame)"
-              [matTooltip]="badgeTooltip(r.possuiGravame)"
-              matTooltipPosition="above"
-            >{{ r.possuiGravame }}</span>
-          </mat-cell>
-        </ng-container>
-
-        <!-- credor -->
-        <ng-container matColumnDef="credor">
-          <mat-header-cell *matHeaderCellDef class="min-w-52">Credor</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-52 text-sm">{{ r.credor ?? '—' }}</mat-cell>
-        </ng-container>
-
-        <!-- agenteFinanceiro -->
-        <ng-container matColumnDef="agenteFinanceiro">
-          <mat-header-cell *matHeaderCellDef class="min-w-44">Agente Financeiro</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-44 text-sm">{{ r.agenteFinanceiro ?? '—' }}</mat-cell>
-        </ng-container>
-
-        <!-- numeroContrato -->
-        <ng-container matColumnDef="numeroContrato">
-          <mat-header-cell *matHeaderCellDef class="min-w-40">N° Contrato</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-40 font-mono text-sm">{{ r.numeroContrato ?? '—' }}</mat-cell>
-        </ng-container>
-
-        <!-- dataInclusao -->
-        <ng-container matColumnDef="dataInclusao">
-          <mat-header-cell *matHeaderCellDef class="min-w-32">Data Inclusão</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-32 text-sm">{{ r.dataInclusao ?? '—' }}</mat-cell>
-        </ng-container>
-
-        <!-- dataVencimentoGravame -->
-        <ng-container matColumnDef="dataVencimentoGravame">
-          <mat-header-cell *matHeaderCellDef class="min-w-32">Vencimento</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-32 text-sm">{{ r.dataVencimentoGravame ?? '—' }}</mat-cell>
+        <!-- gravame -->
+        <ng-container matColumnDef="gravame">
+          <mat-header-cell *matHeaderCellDef class="min-w-80">Gravame</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="min-w-80 text-xs text-gray-600 line-clamp-2">{{ r.gravame ?? '—' }}</mat-cell>
         </ng-container>
 
         <!-- nomeProprietario -->
         <ng-container matColumnDef="nomeProprietario">
-          <mat-header-cell *matHeaderCellDef class="min-w-64">Nome do Proprietário</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef class="min-w-64">Proprietário</mat-header-cell>
           <mat-cell *matCellDef="let r" class="min-w-64 text-sm font-medium">{{ r.nomeProprietario ?? '—' }}</mat-cell>
         </ng-container>
 
@@ -312,112 +218,22 @@ function badgeTooltip(value: string | undefined): string {
           <mat-cell *matCellDef="let r" class="min-w-44 font-mono text-sm">{{ r.cpfCnpj ?? '—' }}</mat-cell>
         </ng-container>
 
-        <!-- dataTransferencia -->
-        <ng-container matColumnDef="dataTransferencia">
-          <mat-header-cell *matHeaderCellDef class="min-w-36">Data Transferência</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-36 text-sm">{{ r.dataTransferencia ?? '—' }}</mat-cell>
-        </ng-container>
-
-        <!-- situacaoTransferencia -->
-        <ng-container matColumnDef="situacaoTransferencia">
-          <mat-header-cell *matHeaderCellDef class="min-w-36 justify-center">Situação</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-36 justify-center">
-            <span class="text-xs font-semibold px-2 py-0.5 rounded-full cursor-default"
-              [ngClass]="badgeClass(r.situacaoTransferencia)"
-              [matTooltip]="badgeTooltip(r.situacaoTransferencia)"
-              matTooltipPosition="above"
-            >{{ r.situacaoTransferencia }}</span>
-          </mat-cell>
-        </ng-container>
-
-        <!-- ultimoExercicio -->
-        <ng-container matColumnDef="ultimoExercicio">
-          <mat-header-cell *matHeaderCellDef class="min-w-32 justify-center">Último Exercício</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-32 justify-center font-semibold">{{ r.ultimoExercicio ?? '—' }}</mat-cell>
-        </ng-container>
-
-        <!-- situacaoCrlv -->
-        <ng-container matColumnDef="situacaoCrlv">
-          <mat-header-cell *matHeaderCellDef class="min-w-32 justify-center">Situação CRLV</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-32 justify-center">
-            <span class="text-xs font-semibold px-2 py-0.5 rounded-full cursor-default"
-              [ngClass]="badgeClass(r.situacaoCrlv)"
-              [matTooltip]="badgeTooltip(r.situacaoCrlv)"
-              matTooltipPosition="above"
-            >{{ r.situacaoCrlv }}</span>
-          </mat-cell>
-        </ng-container>
-
-        <!-- dataEmissao -->
-        <ng-container matColumnDef="dataEmissao">
-          <mat-header-cell *matHeaderCellDef class="min-w-32">Data de Emissão</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-32 text-sm">{{ r.dataEmissao ?? '—' }}</mat-cell>
-        </ng-container>
-
-        <!-- exercicioIpva -->
-        <ng-container matColumnDef="exercicioIpva">
-          <mat-header-cell *matHeaderCellDef class="min-w-28 justify-center">Exercício</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-28 justify-center font-semibold">{{ r.exercicioIpva ?? '—' }}</mat-cell>
+        <!-- ultimoLicenciamento -->
+        <ng-container matColumnDef="ultimoLicenciamento">
+          <mat-header-cell *matHeaderCellDef class="min-w-36 justify-center">Último Licenciamento</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="min-w-36 justify-center font-semibold">{{ r.ultimoLicenciamento ?? '—' }}</mat-cell>
         </ng-container>
 
         <!-- valorIpva -->
         <ng-container matColumnDef="valorIpva">
-          <mat-header-cell *matHeaderCellDef class="min-w-32 justify-end">Valor Total</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef class="min-w-32 justify-end">IPVA</mat-header-cell>
           <mat-cell *matCellDef="let r" class="min-w-32 justify-end font-mono font-semibold">{{ r.valorIpva ?? '—' }}</mat-cell>
         </ng-container>
 
-        <!-- situacaoIpva -->
-        <ng-container matColumnDef="situacaoIpva">
-          <mat-header-cell *matHeaderCellDef class="min-w-32 justify-center">Situação IPVA</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-32 justify-center">
-            <span class="text-xs font-semibold px-2 py-0.5 rounded-full cursor-default"
-              [ngClass]="badgeClass(r.situacaoIpva)"
-              [matTooltip]="badgeTooltip(r.situacaoIpva)"
-              matTooltipPosition="above"
-            >{{ r.situacaoIpva }}</span>
-          </mat-cell>
-        </ng-container>
-
-        <!-- dataVencimentoIpva -->
-        <ng-container matColumnDef="dataVencimentoIpva">
-          <mat-header-cell *matHeaderCellDef class="min-w-36">Vencimento</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-36 text-sm">{{ r.dataVencimentoIpva ?? '—' }}</mat-cell>
-        </ng-container>
-
-        <!-- valorPago -->
-        <ng-container matColumnDef="valorPago">
-          <mat-header-cell *matHeaderCellDef class="min-w-32 justify-end">Valor Pago</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-32 justify-end font-mono text-sm text-green-700">{{ r.valorPago ?? '—' }}</mat-cell>
-        </ng-container>
-
-        <!-- exercicioLicenciamento -->
-        <ng-container matColumnDef="exercicioLicenciamento">
-          <mat-header-cell *matHeaderCellDef class="min-w-28 justify-center">Exercício</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-28 justify-center font-semibold">{{ r.exercicioLicenciamento ?? '—' }}</mat-cell>
-        </ng-container>
-
-        <!-- valorTaxa -->
-        <ng-container matColumnDef="valorTaxa">
-          <mat-header-cell *matHeaderCellDef class="min-w-32 justify-end">Taxa</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-32 justify-end font-mono font-semibold">{{ r.valorTaxa ?? '—' }}</mat-cell>
-        </ng-container>
-
-        <!-- situacaoLicenciamento -->
-        <ng-container matColumnDef="situacaoLicenciamento">
-          <mat-header-cell *matHeaderCellDef class="min-w-36 justify-center">Situação</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-36 justify-center">
-            <span class="text-xs font-semibold px-2 py-0.5 rounded-full cursor-default"
-              [ngClass]="badgeClass(r.situacaoLicenciamento)"
-              [matTooltip]="badgeTooltip(r.situacaoLicenciamento)"
-              matTooltipPosition="above"
-            >{{ r.situacaoLicenciamento }}</span>
-          </mat-cell>
-        </ng-container>
-
-        <!-- dataVencimentoLicenciamento -->
-        <ng-container matColumnDef="dataVencimentoLicenciamento">
-          <mat-header-cell *matHeaderCellDef class="min-w-36">Vencimento</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-36 text-sm">{{ r.dataVencimentoLicenciamento ?? '—' }}</mat-cell>
+        <!-- taxaLicenciamento -->
+        <ng-container matColumnDef="taxaLicenciamento">
+          <mat-header-cell *matHeaderCellDef class="min-w-32 justify-end">Licenciamento</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="min-w-32 justify-end font-mono font-semibold">{{ r.taxaLicenciamento ?? '—' }}</mat-cell>
         </ng-container>
 
         <div *matNoDataRow class="no-data-row">

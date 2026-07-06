@@ -19,9 +19,6 @@ import { MultaDto } from '../models/multa.types';
 import { MatTooltip } from '@angular/material/tooltip';
 
 export const MULTAS_TABLE_COLUMNS: TableColumnDef[] = [
-  { key: 'lote', label: 'Lote' },
-  { key: 'origemConsulta', label: 'Consulta' },
-  { key: 'categoriaConsulta', label: 'Categoria' },
   { key: 'placa', label: 'Placa' },
   { key: 'renavam', label: 'Renavam' },
   { key: 'chassi', label: 'Chassi' },
@@ -65,24 +62,6 @@ export const MULTAS_TABLE_COLUMNS: TableColumnDef[] = [
       <div class="grow flex">
         @let dataSet = multas() ?? [];
         <mat-table [dataSource]="dataSet" class="grow">
-
-          <!-- Lote -->
-          <ng-container matColumnDef="lote">
-            <mat-header-cell *matHeaderCellDef class="min-w-28">Lote</mat-header-cell>
-            <mat-cell *matCellDef="let row" class="min-w-28 font-mono text-sm">{{ row.lote ?? '—' }}</mat-cell>
-          </ng-container>
-
-          <!-- Consulta -->
-          <ng-container matColumnDef="origemConsulta">
-            <mat-header-cell *matHeaderCellDef class="min-w-28">Consulta</mat-header-cell>
-            <mat-cell *matCellDef="let row" class="min-w-28 text-sm font-medium">{{ row.origemConsulta ?? '—' }}</mat-cell>
-          </ng-container>
-
-          <!-- Categoria -->
-          <ng-container matColumnDef="categoriaConsulta">
-            <mat-header-cell *matHeaderCellDef class="min-w-28">Categoria</mat-header-cell>
-            <mat-cell *matCellDef="let row" class="min-w-28 text-sm">{{ row.categoriaConsulta ?? '—' }}</mat-cell>
-          </ng-container>
 
           <!-- Placa -->
           <ng-container matColumnDef="placa">

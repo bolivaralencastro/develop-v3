@@ -34,8 +34,6 @@ export const VEHICLE_HISTORY_TABLE_COLUMNS: TableColumnDef[] = [
   { key: 'licensing', label: 'pre-sales.vehicle-history.licensing' },
   { key: 'recallStatus', label: 'pre-sales.vehicle-history.recall-status' },
   { key: 'ipva', label: 'pre-sales.vehicle-history.ipva' },
-  { key: 'blocked', label: 'Bloqueios' },
-  { key: 'alert', label: 'Alertas' },
   { key: 'fineStatus', label: 'pre-sales.vehicle-history.fines-status' },
 ];
 
@@ -184,26 +182,6 @@ export const VEHICLE_HISTORY_TABLE_COLUMNS: TableColumnDef[] = [
             </mat-header-cell>
             <mat-cell *matCellDef="let element" class="min-w-30">
               <app-vehicle-history-status-tag [status]="element.statusFines" />
-            </mat-cell>
-          </ng-container>
-
-          <!-- Blocked Column -->
-          <ng-container matColumnDef="blocked">
-            <mat-header-cell *matHeaderCellDef mat-sort-header
-                             class="min-w-30">Bloqueios
-            </mat-header-cell>
-            <mat-cell *matCellDef="let element" class="min-w-30">
-              0
-            </mat-cell>
-          </ng-container>
-
-          <!-- Alert Column -->
-          <ng-container matColumnDef="alert">
-            <mat-header-cell *matHeaderCellDef mat-sort-header
-                             class="min-w-30">Alertas
-            </mat-header-cell>
-            <mat-cell *matCellDef="let element" class="min-w-30">
-              0
             </mat-cell>
           </ng-container>
 

@@ -6,9 +6,6 @@ export type ConsultaVehicleDto = {
   renavam: string;
   chassi: string;
   estado: string;
-  lote?: string;
-  origemConsulta?: string;
-  categoriaConsulta?: string;
   status: ConsultaVehicleStatus;
   alerta: boolean;
   situacaoVeiculo: string;
@@ -55,61 +52,42 @@ export type ConsultaDetalheDto = {
   renavam: string;
   chassi: string;
   estado: string;
-  lote?: string;
-  origemConsulta?: string;
-  categoriaConsulta?: string;
+  // STATUS — coluna presente em todas as telas de consulta (planilha MENU CONSULTAS)
+  status: ConsultaVehicleStatus;
   // Situação do Veículo
   descricaoSituacao?: string;
   // Recall
-  situacaoRecall?: string;
-  campanhaRecall?: string;
-  componente?: string;
+  recall?: string;
   descricaoRecall?: string;
+  dataRegistroRecall?: string;
+  dataLimiteRecall?: string;
+  situacaoRecall?: string;
   // GNV
-  possuiGnv?: string;
-  numeroLaudo?: string;
-  dataLaudo?: string;
-  validadeLaudo?: string;
+  ultimoLaudoGnv?: string;
+  prazoRegularizacaoGnv?: string;
   situacaoGnv?: string;
-  empresaInstaladora?: string;
   // Gravame
-  possuiGravame?: string;
-  credor?: string;
-  agenteFinanceiro?: string;
-  numeroContrato?: string;
-  dataInclusao?: string;
-  dataVencimentoGravame?: string;
+  gravame?: string;
   // Proprietário
   nomeProprietario?: string;
   cpfCnpj?: string;
-  dataTransferencia?: string;
-  situacaoTransferencia?: string;
   // CRLV
-  ultimoExercicio?: string;
-  situacaoCrlv?: string;
-  dataEmissao?: string;
+  ultimoLicenciamento?: string;
   // IPVA
-  exercicioIpva?: string;
   valorIpva?: string;
-  situacaoIpva?: string;
-  dataVencimentoIpva?: string;
-  valorPago?: string;
   // Licenciamento
-  exercicioLicenciamento?: string;
-  valorTaxa?: string;
-  situacaoLicenciamento?: string;
-  dataVencimentoLicenciamento?: string;
+  taxaLicenciamento?: string;
 };
 
 export const DETALHE_COLUMNS: Record<ConsultaDetalheType, string[]> = {
-  SITUACAO_VEICULO: ['placa', 'renavam', 'chassi', 'estado', 'descricaoSituacao'],
-  RECALL: ['placa', 'renavam', 'chassi', 'estado', 'situacaoRecall', 'campanhaRecall', 'componente', 'descricaoRecall'],
-  GNV: ['placa', 'renavam', 'chassi', 'estado', 'possuiGnv', 'numeroLaudo', 'dataLaudo', 'validadeLaudo', 'situacaoGnv', 'empresaInstaladora'],
-  GRAVAME: ['placa', 'renavam', 'chassi', 'estado', 'possuiGravame', 'credor', 'agenteFinanceiro', 'numeroContrato', 'dataInclusao', 'dataVencimentoGravame'],
-  PROPRIETARIO: ['placa', 'renavam', 'chassi', 'estado', 'nomeProprietario', 'cpfCnpj', 'dataTransferencia', 'situacaoTransferencia'],
-  CRLV: ['placa', 'renavam', 'chassi', 'estado', 'ultimoExercicio', 'situacaoCrlv', 'dataEmissao'],
-  IPVA: ['placa', 'renavam', 'chassi', 'estado', 'exercicioIpva', 'valorIpva', 'situacaoIpva', 'dataVencimentoIpva', 'valorPago'],
-  LICENCIAMENTO: ['placa', 'renavam', 'chassi', 'estado', 'exercicioLicenciamento', 'valorTaxa', 'situacaoLicenciamento', 'dataVencimentoLicenciamento'],
+  SITUACAO_VEICULO: ['placa', 'renavam', 'chassi', 'estado', 'status', 'descricaoSituacao'],
+  RECALL: ['placa', 'renavam', 'chassi', 'estado', 'status', 'recall', 'descricaoRecall', 'dataRegistroRecall', 'dataLimiteRecall', 'situacaoRecall'],
+  GNV: ['placa', 'renavam', 'chassi', 'estado', 'status', 'ultimoLaudoGnv', 'prazoRegularizacaoGnv', 'situacaoGnv'],
+  GRAVAME: ['placa', 'renavam', 'chassi', 'estado', 'status', 'gravame'],
+  PROPRIETARIO: ['placa', 'renavam', 'chassi', 'estado', 'status', 'nomeProprietario', 'cpfCnpj'],
+  CRLV: ['placa', 'renavam', 'chassi', 'estado', 'status', 'ultimoLicenciamento'],
+  IPVA: ['placa', 'renavam', 'chassi', 'estado', 'status', 'valorIpva'],
+  LICENCIAMENTO: ['placa', 'renavam', 'chassi', 'estado', 'status', 'taxaLicenciamento'],
 };
 
 export const DETALHE_TITLES: Record<ConsultaDetalheType, string> = {

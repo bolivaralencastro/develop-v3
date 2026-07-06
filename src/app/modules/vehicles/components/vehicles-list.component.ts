@@ -19,15 +19,12 @@ import { VehicleDto } from '../models/vehicles.types';
 import { MatTooltip } from '@angular/material/tooltip';
 
 export const VEHICLES_TABLE_COLUMNS: TableColumnDef[] = [
-  { key: 'lote', label: 'Lote' },
-  { key: 'origemConsulta', label: 'Consulta' },
-  { key: 'categoriaConsulta', label: 'Categoria' },
-  { key: 'status', label: 'Status' },
-  { key: 'alerta', label: 'Alerta' },
   { key: 'numberPlate', label: 'Placa' },
   { key: 'renavam', label: 'Renavam' },
   { key: 'chassi', label: 'Chassi' },
   { key: 'state', label: 'Estado' },
+  { key: 'status', label: 'Status' },
+  { key: 'alerta', label: 'Alerta' },
   { key: 'situacaoVeiculo', label: 'Veículo' },
   { key: 'gravame', label: 'Gravame' },
   { key: 'owner', label: 'Proprietário' },
@@ -65,24 +62,6 @@ export const VEHICLES_TABLE_COLUMNS: TableColumnDef[] = [
       <div class="grow flex">
         @let dataSet = vehicles() ?? [];
         <mat-table [dataSource]="dataSet" class="grow">
-
-          <!-- Lote Column -->
-          <ng-container matColumnDef="lote">
-            <mat-header-cell *matHeaderCellDef class="min-w-28">Lote</mat-header-cell>
-            <mat-cell *matCellDef="let row" class="min-w-28 font-mono text-sm">{{ row.lote ?? '—' }}</mat-cell>
-          </ng-container>
-
-          <!-- Origem Column -->
-          <ng-container matColumnDef="origemConsulta">
-            <mat-header-cell *matHeaderCellDef class="min-w-28">Consulta</mat-header-cell>
-            <mat-cell *matCellDef="let row" class="min-w-28 text-sm font-medium">{{ row.origemConsulta ?? '—' }}</mat-cell>
-          </ng-container>
-
-          <!-- Categoria Column -->
-          <ng-container matColumnDef="categoriaConsulta">
-            <mat-header-cell *matHeaderCellDef class="min-w-28">Categoria</mat-header-cell>
-            <mat-cell *matCellDef="let row" class="min-w-28 text-sm">{{ row.categoriaConsulta ?? '—' }}</mat-cell>
-          </ng-container>
 
           <!-- Status Column -->
           <ng-container matColumnDef="status">

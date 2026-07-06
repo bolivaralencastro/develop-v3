@@ -5,9 +5,16 @@ import { ActivatedRoute } from '@angular/router';
 import { PageMeta } from '@core/http';
 import { PageTitleComponent } from 'app/layout/common/page-title/page-title.component';
 import { MULTAS_TABLE_COLUMNS, MultasTableComponent } from '../components/multas-table.component';
+import {
+  MultasResumoTableComponent,
+  RESUMO_IMPOSTAS_COLUMNS,
+  RESUMO_NOTIFICADAS_COLUMNS,
+  RESUMO_TODAS_COLUMNS,
+} from '../components/multas-resumo-table.component';
 import { MultasFilterComponent } from '../components/multas-filter.component';
-import { MultaDto, MultaFilter } from '../models/multa.types';
+import { MultaDto, MultaFilter, MultaResumoDto } from '../models/multa.types';
 import { MultasService } from '../services/multas.service';
+import { TableColumnDef } from 'app/layout/common/table-column-management/table-column-management.component';
 
 const TIPO_LABELS: Record<string, string> = {
   IMPOSTAS: 'Impostas',
@@ -15,9 +22,16 @@ const TIPO_LABELS: Record<string, string> = {
   TODAS: 'Todas as Multas',
 };
 
+// resumo por veículo (planilha 1.10.x) para as telas de Consultas › Multas
+const RESUMO_COLUMNS: Record<string, TableColumnDef[]> = {
+  IMPOSTAS: RESUMO_IMPOSTAS_COLUMNS,
+  NOTIFICADAS: RESUMO_NOTIFICADAS_COLUMNS,
+  TODAS: RESUMO_TODAS_COLUMNS,
+};
+
 @Component({
   selector: 'app-multas-list',
-  imports: [MultasTableComponent, MultasFilterComponent, MatPaginator, NgClass, PageTitleComponent],
+  imports: [MultasTableComponent, MultasResumoTableComponent, MultasFilterComponent, MatPaginator, NgClass, PageTitleComponent],
   providers: [MultasService],
   template: `
     <page-title [title]="pageTitle"></page-title>
@@ -26,15 +40,22 @@ const TIPO_LABELS: Record<string, string> = {
       <app-multas-filter
         class="w-full"
         [columns]="columnDefs"
-        [storageKey]="'multas-' + tipo + '-columns'"
+        [storageKey]="'multas-' + tipo + (isSummary ? '-resumo' : '') + '-columns'"
         (filterChange)="onFilterChange($event)"
         (visibleColumnsChange)="visibleColumns.set($event)"
       />
 
-      <app-multas-table
-        [multas]="multas()"
-        [visibleColumns]="visibleColumns()"
-      />
+      @if (isSummary) {
+        <app-multas-resumo-table
+          [items]="resumo()"
+          [visibleColumns]="visibleColumns()"
+        />
+      } @else {
+        <app-multas-table
+          [multas]="multas()"
+          [visibleColumns]="visibleColumns()"
+        />
+      }
 
       @let pageMeta = pagination();
       <mat-paginator
@@ -45,7 +66,7 @@ const TIPO_LABELS: Record<string, string> = {
         [pageSize]="pageMeta?.itemsPerPage"
         [pageSizeOptions]="[10, 20, 50, 100]"
         [showFirstLastButtons]="true"
-        [disabled]="!multas()?.length"
+        [disabled]="!pageMeta?.totalItems"
         (page)="onPageChange($event)"
       />
     </div>
@@ -65,23 +86,31 @@ export class MultasListComponent implements OnInit {
 
   protected tipo: MultaFilter['tipo'] = 'TODAS';
   protected pageTitle = 'Multas';
+  protected isSummary = false;
 
-  protected readonly columnDefs = MULTAS_TABLE_COLUMNS;
+  protected columnDefs: TableColumnDef[] = MULTAS_TABLE_COLUMNS;
   protected readonly visibleColumns = signal<string[]>(MULTAS_TABLE_COLUMNS.map((c) => c.key));
   protected readonly isLoading: Signal<boolean>;
   protected readonly multas: Signal<MultaDto[]>;
-  protected readonly pagination: Signal<PageMeta>;
+  protected readonly resumo: Signal<MultaResumoDto[]>;
+  protected pagination: Signal<PageMeta>;
 
   constructor() {
     this.isLoading = this.multasService.isLoading;
     this.multas = this.multasService.multas;
-    this.pagination = this.multasService.pagination;
+    this.resumo = this.multasService.resumoPorVeiculo;
   }
 
   ngOnInit() {
     this.tipo = this.route.snapshot.data['tipo'] ?? 'TODAS';
+    this.isSummary = !!this.route.snapshot.data['summary'];
     const titlePrefix = this.route.snapshot.data['titlePrefix'] ?? 'Multas';
     this.pageTitle = `${titlePrefix} › ${TIPO_LABELS[this.tipo] ?? 'Todas as Multas'}`;
+
+    this.columnDefs = this.isSummary ? RESUMO_COLUMNS[this.tipo] ?? RESUMO_COLUMNS['TODAS'] : MULTAS_TABLE_COLUMNS;
+    this.visibleColumns.set(this.columnDefs.map((c) => c.key));
+    this.pagination = this.isSummary ? this.multasService.resumoPagination : this.multasService.pagination;
+
     this.multasService.setTipo(this.tipo);
   }
 

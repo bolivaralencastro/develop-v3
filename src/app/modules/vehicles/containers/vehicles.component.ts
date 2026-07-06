@@ -10,6 +10,9 @@ import { PageTitleComponent } from 'app/layout/common/page-title/page-title.comp
 import { VehicleDetailPanelComponent } from '../components/vehicle-detail-panel.component';
 import { FuseDrawerComponent } from '@fuse/components/drawer';
 import { ActivatedRoute } from '@angular/router';
+import { MultasService } from '../../multas/services/multas.service';
+import { MultaResumoDto } from '../../multas/models/multa.types';
+import { MultasResumoTableComponent, RESUMO_VEICULOS_COLUMNS } from '../../multas/components/multas-resumo-table.component';
 
 const STATUS_FILTER_LABELS: Record<VehicleStatusFilter, string> = {
   LIBERADOS: 'Veículos › Liberados',
@@ -30,23 +33,31 @@ const STATUS_FILTER_LABELS: Record<VehicleStatusFilter, string> = {
     PageTitleComponent,
     VehicleDetailPanelComponent,
     FuseDrawerComponent,
+    MultasResumoTableComponent,
   ],
-  providers: [VehiclesService],
+  providers: [VehiclesService, MultasService],
   template: `
     <page-title [title]="pageTitle"></page-title>
 
     <div class="mx-4 mb-4 flex flex-col bg-card rounded-lg shadow overflow-hidden grow">
-      <app-vehicles-list-filter
-        [columns]="columnDefs"
-        (filterChange)="onFilterChange($event)"
-        (visibleColumnsChange)="visibleColumns.set($event)"
-      ></app-vehicles-list-filter>
+      @if (isMultasResumo) {
+        <app-multas-resumo-table
+          [items]="multasResumo()"
+          [visibleColumns]="resumoVisibleColumns"
+        />
+      } @else {
+        <app-vehicles-list-filter
+          [columns]="columnDefs"
+          (filterChange)="onFilterChange($event)"
+          (visibleColumnsChange)="visibleColumns.set($event)"
+        ></app-vehicles-list-filter>
 
-      <app-vehicles-list
-        [vehicles]="vehicles()"
-        [visibleColumns]="visibleColumns()"
-        (vehicleClick)="openVehiclePanel($event)"
-      ></app-vehicles-list>
+        <app-vehicles-list
+          [vehicles]="vehicles()"
+          [visibleColumns]="visibleColumns()"
+          (vehicleClick)="openVehiclePanel($event)"
+        ></app-vehicles-list>
+      }
 
       @let pageMeta = pagination();
       <mat-paginator
@@ -57,7 +68,7 @@ const STATUS_FILTER_LABELS: Record<VehicleStatusFilter, string> = {
         [pageSize]="pageMeta?.itemsPerPage"
         [pageSizeOptions]="[10, 20, 50, 100]"
         [showFirstLastButtons]="true"
-        [disabled]="!vehicles()?.length"
+        [disabled]="!pageMeta?.totalItems"
         (page)="onPageChange($event)"
       ></mat-paginator>
     </div>
@@ -103,20 +114,34 @@ export class VehiclesComponent implements OnInit {
 
   protected readonly isLoading: Signal<boolean>;
   protected readonly vehicles: Signal<VehicleDto[]>;
-  protected readonly pagination: Signal<PageMeta>;
+  protected pagination: Signal<PageMeta>;
   protected readonly selectedVehicleId = signal<string | null>(null);
 
-  constructor(private readonly vehiclesService: VehiclesService) {
+  protected isMultasResumo = false;
+  protected readonly resumoColumnDefs = RESUMO_VEICULOS_COLUMNS;
+  protected readonly resumoVisibleColumns = RESUMO_VEICULOS_COLUMNS.map((c) => c.key);
+  protected readonly multasResumo: Signal<MultaResumoDto[]>;
+
+  constructor(
+    private readonly vehiclesService: VehiclesService,
+    private readonly multasService: MultasService,
+  ) {
     this.vehicles = vehiclesService.vehicles;
     this.isLoading = vehiclesService.isLoading;
     this.pagination = vehiclesService.pagination;
+    this.multasResumo = multasService.resumoPorVeiculo;
   }
 
   ngOnInit() {
     const statusFilter = this.route.snapshot.data['statusFilter'] as VehicleStatusFilter | undefined;
     if (statusFilter) {
       this.pageTitle = STATUS_FILTER_LABELS[statusFilter] ?? 'Veículos';
-      this.vehiclesService.setStatusFilter(statusFilter);
+      this.isMultasResumo = statusFilter === 'MULTAS';
+      if (this.isMultasResumo) {
+        this.pagination = this.multasService.resumoPagination;
+      } else {
+        this.vehiclesService.setStatusFilter(statusFilter);
+      }
     }
   }
 
