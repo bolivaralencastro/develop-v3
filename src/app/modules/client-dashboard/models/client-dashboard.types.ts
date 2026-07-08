@@ -12,13 +12,22 @@ export interface KpiItem {
   subLabel: string;
 }
 
+export type EvolutionPeriod = 'semanal' | 'mensal' | 'trimestral';
+
+export interface EvolutionSeries {
+  categories: string[];
+  atual: number[];
+  anterior: number[];
+}
+
 export interface DashboardData {
   kpis: KpiItem[];
-  queriesChartSeries: { name: string; data: number[] }[];
-  queriesChartCategories: string[];
-  statusChartSeries: number[];
+  vehicleStatusSeries: number[];
   blocksChartSeries: number[];
   blocksChartCategories: string[];
+  alertsChartSeries: number[];
+  alertsChartCategories: string[];
+  evolutionByPeriod: Record<EvolutionPeriod, EvolutionSeries>;
   unblockedByRegion: RegionRow[];
   blockedByRegion: RegionRow[];
 }

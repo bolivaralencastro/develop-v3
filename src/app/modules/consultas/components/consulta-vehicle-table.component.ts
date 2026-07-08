@@ -20,12 +20,12 @@ import { NgClass } from '@angular/common';
 import { MatTooltip } from '@angular/material/tooltip';
 
 export const CONSULTA_VEHICLE_TABLE_COLUMNS: TableColumnDef[] = [
+  { key: 'status', label: 'Status' },
+  { key: 'alerta', label: 'Alerta' },
   { key: 'placa', label: 'Placa' },
   { key: 'renavam', label: 'Renavam' },
   { key: 'chassi', label: 'Chassi' },
   { key: 'estado', label: 'Estado' },
-  { key: 'status', label: 'Status' },
-  { key: 'alerta', label: 'Alerta' },
   { key: 'situacaoVeiculo', label: 'Veículo' },
   { key: 'gravame', label: 'Gravame' },
   { key: 'proprietario', label: 'Proprietário' },
@@ -55,7 +55,7 @@ export const CONSULTA_VEHICLE_TABLE_COLUMNS: TableColumnDef[] = [
     MatTooltip,
   ],
   template: `
-    @if (!displayedColumns()?.length) {
+    @if (!selectedColumns()?.length) {
       <div class="table-columns-empty">
         <mat-icon>settings</mat-icon>
         <span class="text-sm text-secondary">Selecione as colunas no ícone de engrenagem</span>
@@ -67,16 +67,16 @@ export const CONSULTA_VEHICLE_TABLE_COLUMNS: TableColumnDef[] = [
 
           <!-- Status Column -->
           <ng-container matColumnDef="status">
-            <mat-header-cell *matHeaderCellDef class="min-w-20 justify-center">Status</mat-header-cell>
-            <mat-cell *matCellDef="let row" class="min-w-20 justify-center">
+            <mat-header-cell *matHeaderCellDef class="flex-none w-24 justify-center">Status</mat-header-cell>
+            <mat-cell *matCellDef="let row" class="flex-none w-24 justify-center">
               <app-consulta-status-tag [status]="row.status" />
             </mat-cell>
           </ng-container>
 
           <!-- Alerta Column -->
           <ng-container matColumnDef="alerta">
-            <mat-header-cell *matHeaderCellDef class="min-w-20 justify-center">Alerta</mat-header-cell>
-            <mat-cell *matCellDef="let row" class="min-w-20 justify-center">
+            <mat-header-cell *matHeaderCellDef class="flex-none w-24 justify-center">Alerta</mat-header-cell>
+            <mat-cell *matCellDef="let row" class="flex-none w-24 justify-center">
               @if (row.alerta) {
                 <span
                   class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-700 cursor-default"
@@ -91,26 +91,26 @@ export const CONSULTA_VEHICLE_TABLE_COLUMNS: TableColumnDef[] = [
 
           <!-- Placa Column -->
           <ng-container matColumnDef="placa">
-            <mat-header-cell *matHeaderCellDef class="min-w-28">Placa</mat-header-cell>
-            <mat-cell *matCellDef="let row" class="min-w-28 font-mono font-semibold">{{ row.placa }}</mat-cell>
+            <mat-header-cell *matHeaderCellDef class="flex-none w-28">Placa</mat-header-cell>
+            <mat-cell *matCellDef="let row" class="flex-none w-28 font-mono font-semibold">{{ row.placa }}</mat-cell>
           </ng-container>
 
           <!-- Renavam Column -->
           <ng-container matColumnDef="renavam">
-            <mat-header-cell *matHeaderCellDef class="min-w-36">Renavam</mat-header-cell>
-            <mat-cell *matCellDef="let row" class="min-w-36 font-mono text-sm">{{ row.renavam }}</mat-cell>
+            <mat-header-cell *matHeaderCellDef class="flex-none w-36">Renavam</mat-header-cell>
+            <mat-cell *matCellDef="let row" class="flex-none w-36 font-mono text-sm">{{ row.renavam }}</mat-cell>
           </ng-container>
 
           <!-- Chassi Column -->
           <ng-container matColumnDef="chassi">
-            <mat-header-cell *matHeaderCellDef class="min-w-44">Chassi</mat-header-cell>
-            <mat-cell *matCellDef="let row" class="min-w-44 font-mono text-sm">{{ row.chassi }}</mat-cell>
+            <mat-header-cell *matHeaderCellDef class="flex-none w-48">Chassi</mat-header-cell>
+            <mat-cell *matCellDef="let row" class="flex-none w-48 font-mono text-sm">{{ row.chassi }}</mat-cell>
           </ng-container>
 
           <!-- Estado Column -->
           <ng-container matColumnDef="estado">
-            <mat-header-cell *matHeaderCellDef class="min-w-20">Estado</mat-header-cell>
-            <mat-cell *matCellDef="let row" class="min-w-20">{{ row.estado }}</mat-cell>
+            <mat-header-cell *matHeaderCellDef class="flex-none w-20">Estado</mat-header-cell>
+            <mat-cell *matCellDef="let row" class="flex-none w-20">{{ row.estado }}</mat-cell>
           </ng-container>
 
           <!-- Situação Veículo Column -->
@@ -202,5 +202,6 @@ export class ConsultaVehicleTableComponent {
   vehicles = input<ConsultaVehicleDto[]>([]);
   rowClick = output<ConsultaVehicleDto>();
 
-  protected readonly displayedColumns = computed(() => this.visibleColumns() ?? []);
+  protected readonly selectedColumns = computed(() => this.visibleColumns() ?? []);
+  protected readonly displayedColumns = this.selectedColumns;
 }

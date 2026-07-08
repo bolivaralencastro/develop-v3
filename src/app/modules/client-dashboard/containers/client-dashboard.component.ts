@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, computed, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
 import { ApexOptions, NgApexchartsModule } from 'ng-apexcharts';
 import { MatDateRangePicker, MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { KpiCardComponent } from '../components/kpi-card.component';
 import { RegionTableComponent } from '../components/region-table.component';
 import { ClientDashboardService } from '../services/client-dashboard.service';
+import { EvolutionPeriod } from '../models/client-dashboard.types';
 
 @Component({
   selector: 'app-client-dashboard',
@@ -38,30 +39,36 @@ export class ClientDashboardComponent implements OnInit {
   protected readonly unblockedByRegion = computed(() => this.dashboardService.data()?.unblockedByRegion ?? []);
   protected readonly blockedByRegion = computed(() => this.dashboardService.data()?.blockedByRegion ?? []);
 
-  protected readonly queriesChart = computed<ApexOptions>(() => {
+  protected readonly evolutionPeriod = signal<EvolutionPeriod>('semanal');
+
+  protected readonly evolutionChart = computed<ApexOptions>(() => {
     const data = this.dashboardService.data();
     if (!data) {
       return {};
     }
+    const series = data.evolutionByPeriod[this.evolutionPeriod()];
 
     return {
       chart: { type: 'line', height: 300, toolbar: { show: false }, fontFamily: 'inherit' },
       colors: ['#0f172a', '#94a3b8'],
       dataLabels: { enabled: false },
       grid: { borderColor: 'var(--fuse-border)', padding: { left: 4, right: 4 } },
-      legend: { show: false },
-      series: data.queriesChartSeries,
+      legend: { position: 'bottom' },
+      series: [
+        { name: 'Período atual', data: series.atual },
+        { name: 'Período anterior', data: series.anterior },
+      ],
       stroke: { width: 3, curve: 'smooth' },
       tooltip: { theme: 'dark' },
       xaxis: {
-        categories: data.queriesChartCategories,
+        categories: series.categories,
         labels: { style: { colors: 'var(--fuse-text-secondary)' } },
       },
       yaxis: { labels: { style: { colors: 'var(--fuse-text-secondary)' } } },
     };
   });
 
-  protected readonly statusChart = computed<ApexOptions>(() => {
+  protected readonly vehicleStatusChart = computed<ApexOptions>(() => {
     const data = this.dashboardService.data();
     if (!data) {
       return {};
@@ -69,12 +76,12 @@ export class ClientDashboardComponent implements OnInit {
 
     return {
       chart: { type: 'donut', height: 300, width: '100%' },
-      colors: ['#0f172a', '#94a3b8', '#f97316'],
+      colors: ['#16a34a', '#f59e0b', '#ea580c', '#dc2626'],
       dataLabels: { enabled: false },
-      labels: ['Concluído', 'Processando', 'Erro'],
+      labels: ['Liberado', 'Liberado com Alerta', 'Bloqueado com Alerta', 'Bloqueado'],
       legend: { position: 'bottom' },
       plotOptions: { pie: { donut: { size: '70%' } } },
-      series: data.statusChartSeries,
+      series: data.vehicleStatusSeries,
       stroke: { width: 0 },
     };
   });
@@ -87,7 +94,7 @@ export class ClientDashboardComponent implements OnInit {
 
     return {
       chart: { type: 'bar', height: 300, width: '100%', toolbar: { show: false }, fontFamily: 'inherit' },
-      colors: ['#0f172a'],
+      colors: ['#dc2626'],
       dataLabels: { enabled: false },
       grid: { borderColor: 'var(--fuse-border)', padding: { left: 0, right: 0 } },
       plotOptions: { bar: { horizontal: true, barHeight: '55%', borderRadius: 4 } },
@@ -101,6 +108,32 @@ export class ClientDashboardComponent implements OnInit {
     };
   });
 
+  protected readonly alertsChart = computed<ApexOptions>(() => {
+    const data = this.dashboardService.data();
+    if (!data) {
+      return {};
+    }
+
+    return {
+      chart: { type: 'bar', height: 300, width: '100%', toolbar: { show: false }, fontFamily: 'inherit' },
+      colors: ['#f59e0b'],
+      dataLabels: { enabled: false },
+      grid: { borderColor: 'var(--fuse-border)', padding: { left: 0, right: 0 } },
+      plotOptions: { bar: { horizontal: true, barHeight: '55%', borderRadius: 4 } },
+      series: [{ name: 'Alertas', data: data.alertsChartSeries }],
+      tooltip: { theme: 'dark' },
+      xaxis: {
+        categories: data.alertsChartCategories,
+        labels: { style: { colors: 'var(--fuse-text-secondary)' } },
+      },
+      yaxis: { labels: { style: { colors: 'var(--fuse-text-secondary)', fontSize: '11px' } } },
+    };
+  });
+
+  protected onEvolutionPeriodChange(period: EvolutionPeriod) {
+    this.evolutionPeriod.set(period);
+  }
+
   protected readonly range = new FormGroup({
     start: new FormControl<Date | null>(null),
     end: new FormControl<Date | null>(null),
@@ -108,7 +141,7 @@ export class ClientDashboardComponent implements OnInit {
 
   protected preset: '30' | '7' | 'today' | 'custom' = '30';
 
-  protected readonly skeletonKpis = [0, 1, 2, 3, 4, 5];
+  protected readonly skeletonKpis = [0, 1, 2, 3, 4];
   protected readonly skeletonRows = [0, 1, 2, 3];
 
   constructor() {

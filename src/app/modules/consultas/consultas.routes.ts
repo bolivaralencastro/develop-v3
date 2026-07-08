@@ -1,60 +1,23 @@
 import { Routes } from '@angular/router';
 import { ConsultaDetalheComponent } from './containers/consulta-detalhe.component';
-import { PreSalesListComponent } from '../pre-sales/containers/pre-sales-list.component';
+import { ConsultaTotalComponent } from './containers/consulta-total.component';
 import { PreSalesDetailComponent } from '../pre-sales/containers/pre-sales-detail.component';
 import { MultasListComponent } from '../multas/containers/multas-list.component';
 
 export default [
-  { path: '', redirectTo: 'total/pre-venda', pathMatch: 'full' },
+  { path: '', redirectTo: 'total', pathMatch: 'full' },
   {
     path: 'total',
     children: [
-      { path: '', redirectTo: 'pre-venda', pathMatch: 'full' },
       {
-        path: 'pre-venda',
-        children: [
-          {
-            path: '',
-            component: PreSalesListComponent,
-            data: {
-              title: 'Consultas › Total › Pré-venda',
-              storageKey: 'consultas-total-pre-venda-columns',
-              lockedQueryType: 'PRE_SALES',
-            },
-          },
-          { path: ':id', component: PreSalesDetailComponent, data: { title: 'Consultas › Total › Pré-venda' } },
-        ],
+        path: '',
+        component: ConsultaTotalComponent,
+        data: {
+          title: 'Consultas › Total',
+          storageKey: 'consultas-total-columns',
+        },
       },
-      {
-        path: 'trimestral',
-        children: [
-          {
-            path: '',
-            component: PreSalesListComponent,
-            data: {
-              title: 'Consultas › Total › Trimestral',
-              storageKey: 'consultas-total-trimestral-columns',
-              lockedQueryType: 'QUARTERLY',
-            },
-          },
-          { path: ':id', component: PreSalesDetailComponent, data: { title: 'Consultas › Total › Trimestral' } },
-        ],
-      },
-      {
-        path: 'especial',
-        children: [
-          {
-            path: '',
-            component: PreSalesListComponent,
-            data: {
-              title: 'Consultas › Total › Especial',
-              storageKey: 'consultas-total-especial-columns',
-              lockedQueryType: 'SPECIAL',
-            },
-          },
-          { path: ':id', component: PreSalesDetailComponent, data: { title: 'Consultas › Total › Especial' } },
-        ],
-      },
+      { path: ':id', component: PreSalesDetailComponent, data: { title: 'Consultas › Total' } },
     ],
   },
   { path: 'situacao-veiculo', component: ConsultaDetalheComponent, data: { consulType: 'SITUACAO_VEICULO' } },

@@ -17,10 +17,7 @@ export type ConsultaVehicleDto = {
   multas: string;
 };
 
-export type ConsultaQueryType = 'PRE_VENDA' | 'TRIMESTRAL' | 'ESPECIAL';
-
 export type ConsultaFilter = {
-  queryType?: ConsultaQueryType;
   search?: string;
   estado?: string[];
   status?: ConsultaVehicleStatus[];
@@ -29,6 +26,8 @@ export type ConsultaFilter = {
 };
 
 // ── Detalhe pages ─────────────────────────────────────────────────────────────
+
+export type ConsultaDetalheStatus = 'BLOQUEADO' | 'ALERTA' | 'LIBERADO';
 
 export type ConsultaDetalheFilter = {
   search?: string;
@@ -53,7 +52,8 @@ export type ConsultaDetalheDto = {
   chassi: string;
   estado: string;
   // STATUS — coluna presente em todas as telas de consulta (planilha MENU CONSULTAS)
-  status: ConsultaVehicleStatus;
+  // undefined = informação faltando no sistema (dado não retornado pela fonte)
+  status?: ConsultaDetalheStatus;
   // Situação do Veículo
   descricaoSituacao?: string;
   // Recall

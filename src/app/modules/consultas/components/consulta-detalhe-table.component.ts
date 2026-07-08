@@ -17,38 +17,46 @@ const BASE_COLUMNS: TableColumnDef[] = [
 
 export const DETALHE_COLUMN_DEFS: Record<ConsultaDetalheType, TableColumnDef[]> = {
   SITUACAO_VEICULO: [
-    ...BASE_COLUMNS, STATUS_COLUMN,
+    STATUS_COLUMN,
+    ...BASE_COLUMNS,
     { key: 'descricaoSituacao', label: 'Situação Veículo' },
   ],
   RECALL: [
-    ...BASE_COLUMNS, STATUS_COLUMN,
+    STATUS_COLUMN,
+    { key: 'situacaoRecall', label: 'Situação Recall' },
+    ...BASE_COLUMNS,
     { key: 'recall', label: 'Recall' }, { key: 'descricaoRecall', label: 'Descrição' },
     { key: 'dataRegistroRecall', label: 'Data Registro' }, { key: 'dataLimiteRecall', label: 'Data Limite' },
-    { key: 'situacaoRecall', label: 'Situação Recall' },
   ],
   GNV: [
-    ...BASE_COLUMNS, STATUS_COLUMN,
-    { key: 'ultimoLaudoGnv', label: 'Último Laudo CSV' }, { key: 'prazoRegularizacaoGnv', label: 'Prazo para Regularização' },
+    STATUS_COLUMN,
     { key: 'situacaoGnv', label: 'Situação CSV' },
+    ...BASE_COLUMNS,
+    { key: 'ultimoLaudoGnv', label: 'Último Laudo CSV' }, { key: 'prazoRegularizacaoGnv', label: 'Prazo para Regularização' },
   ],
   GRAVAME: [
-    ...BASE_COLUMNS, STATUS_COLUMN,
+    STATUS_COLUMN,
+    ...BASE_COLUMNS,
     { key: 'gravame', label: 'Gravame' },
   ],
   PROPRIETARIO: [
-    ...BASE_COLUMNS, STATUS_COLUMN,
+    STATUS_COLUMN,
+    ...BASE_COLUMNS,
     { key: 'nomeProprietario', label: 'Proprietário' }, { key: 'cpfCnpj', label: 'CPF / CNPJ' },
   ],
   CRLV: [
-    ...BASE_COLUMNS, STATUS_COLUMN,
+    STATUS_COLUMN,
+    ...BASE_COLUMNS,
     { key: 'ultimoLicenciamento', label: 'Último Licenciamento' },
   ],
   IPVA: [
-    ...BASE_COLUMNS, STATUS_COLUMN,
+    STATUS_COLUMN,
+    ...BASE_COLUMNS,
     { key: 'valorIpva', label: 'IPVA' },
   ],
   LICENCIAMENTO: [
-    ...BASE_COLUMNS, STATUS_COLUMN,
+    STATUS_COLUMN,
+    ...BASE_COLUMNS,
     { key: 'taxaLicenciamento', label: 'Licenciamento' },
   ],
 };
@@ -76,6 +84,16 @@ function badgeTooltip(value: string | undefined): string {
   return STATUS_TOOLTIP[value ?? ''] ?? '';
 }
 
+const VEHICLE_STATUS_TOOLTIP: Record<string, string> = {
+  LIBERADO: 'Liberado — veículo sem restrições ativas',
+  ALERTA: 'Alerta — veículo requer atenção',
+  BLOQUEADO: 'Bloqueado — veículo com restrições ou impedimentos',
+};
+
+function statusTooltip(value: string | undefined): string {
+  return VEHICLE_STATUS_TOOLTIP[value ?? ''] ?? 'Informação faltando no sistema';
+}
+
 @Component({
   selector: 'app-consulta-detalhe-table',
   imports: [
@@ -90,45 +108,53 @@ function badgeTooltip(value: string | undefined): string {
 
         <!-- placa -->
         <ng-container matColumnDef="placa">
-          <mat-header-cell *matHeaderCellDef class="min-w-28">Placa</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-28 font-mono font-semibold">{{ r.placa }}</mat-cell>
+          <mat-header-cell *matHeaderCellDef class="flex-none w-28">Placa</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="flex-none w-28 font-mono font-semibold">{{ r.placa }}</mat-cell>
         </ng-container>
 
         <!-- renavam -->
         <ng-container matColumnDef="renavam">
-          <mat-header-cell *matHeaderCellDef class="min-w-36">Renavam</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-36 font-mono text-sm">{{ r.renavam }}</mat-cell>
+          <mat-header-cell *matHeaderCellDef class="flex-none w-36">Renavam</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="flex-none w-36 font-mono text-sm">{{ r.renavam }}</mat-cell>
         </ng-container>
 
         <!-- chassi -->
         <ng-container matColumnDef="chassi">
-          <mat-header-cell *matHeaderCellDef class="min-w-44">Chassi</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-44 font-mono text-sm">{{ r.chassi }}</mat-cell>
+          <mat-header-cell *matHeaderCellDef class="flex-none w-48">Chassi</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="flex-none w-48 font-mono text-sm">{{ r.chassi }}</mat-cell>
         </ng-container>
 
         <!-- estado -->
         <ng-container matColumnDef="estado">
-          <mat-header-cell *matHeaderCellDef class="min-w-20">Estado</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-20">{{ r.estado }}</mat-cell>
+          <mat-header-cell *matHeaderCellDef class="flex-none w-20">Estado</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="flex-none w-20">{{ r.estado }}</mat-cell>
         </ng-container>
 
         <!-- status -->
         <ng-container matColumnDef="status">
-          <mat-header-cell *matHeaderCellDef class="min-w-20 justify-center">Status</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-20 justify-center">
+          <mat-header-cell *matHeaderCellDef class="flex-none w-24 justify-center">Status</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="flex-none w-24 justify-center">
             <span
               class="inline-flex items-center justify-center w-8 h-8 rounded-full cursor-default"
               [ngClass]="{
                 'bg-green-100 text-green-700': r.status === 'LIBERADO',
-                'bg-red-100 text-red-700': r.status === 'BLOQUEADO'
+                'bg-amber-100 text-amber-700': r.status === 'ALERTA',
+                'bg-red-100 text-red-700': r.status === 'BLOQUEADO',
+                'bg-yellow-300': !r.status
               }"
-              [matTooltip]="r.status === 'LIBERADO' ? 'Liberado — veículo sem restrições ativas' : 'Bloqueado — veículo com restrições ou impedimentos'"
+              [matTooltip]="statusTooltip(r.status)"
               matTooltipPosition="above"
             >
-              @if (r.status === 'LIBERADO') {
-                <mat-icon class="icon-size-5" svgIcon="lucide:check-circle"></mat-icon>
-              } @else {
-                <mat-icon class="icon-size-5" svgIcon="lucide:x-circle"></mat-icon>
+              @switch (r.status) {
+                @case ('LIBERADO') {
+                  <mat-icon class="icon-size-5" svgIcon="lucide:check-circle"></mat-icon>
+                }
+                @case ('ALERTA') {
+                  <mat-icon class="icon-size-5" svgIcon="lucide:triangle-alert"></mat-icon>
+                }
+                @case ('BLOQUEADO') {
+                  <mat-icon class="icon-size-5" svgIcon="lucide:x-circle"></mat-icon>
+                }
               }
             </span>
           </mat-cell>
@@ -166,8 +192,8 @@ function badgeTooltip(value: string | undefined): string {
 
         <!-- situacaoRecall -->
         <ng-container matColumnDef="situacaoRecall">
-          <mat-header-cell *matHeaderCellDef class="min-w-36 justify-center">Situação Recall</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-36 justify-center">
+          <mat-header-cell *matHeaderCellDef class="flex-none w-40 justify-center">Situação Recall</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="flex-none w-40 justify-center">
             <span class="text-xs font-semibold px-2 py-0.5 rounded-full cursor-default"
               [ngClass]="badgeClass(r.situacaoRecall)"
               [matTooltip]="badgeTooltip(r.situacaoRecall)"
@@ -190,8 +216,8 @@ function badgeTooltip(value: string | undefined): string {
 
         <!-- situacaoGnv -->
         <ng-container matColumnDef="situacaoGnv">
-          <mat-header-cell *matHeaderCellDef class="min-w-28 justify-center">Situação CSV</mat-header-cell>
-          <mat-cell *matCellDef="let r" class="min-w-28 justify-center">
+          <mat-header-cell *matHeaderCellDef class="flex-none w-40 justify-center">Situação CSV</mat-header-cell>
+          <mat-cell *matCellDef="let r" class="flex-none w-40 justify-center">
             <span class="text-xs font-semibold px-2 py-0.5 rounded-full cursor-default"
               [ngClass]="badgeClass(r.situacaoGnv)"
               [matTooltip]="badgeTooltip(r.situacaoGnv)"
@@ -268,10 +294,10 @@ export class ConsultaDetalheTableComponent {
 
   protected readonly displayedColumns = computed(() => {
     const override = this.visibleColumns();
-    if (override) return override;
-    return DETALHE_COLUMN_DEFS[this.consulType()]?.map((c) => c.key) ?? [];
+    return override ?? DETALHE_COLUMN_DEFS[this.consulType()]?.map((c) => c.key) ?? [];
   });
 
   protected readonly badgeClass = badgeClass;
   protected readonly badgeTooltip = badgeTooltip;
+  protected readonly statusTooltip = statusTooltip;
 }

@@ -31,7 +31,7 @@
 
   <!-- KPIs -->
   @if (loading()) {
-    <div class="col-span-12 grid grid-cols-2 gap-4 lg:grid-cols-6">
+    <div class="col-span-12 grid grid-cols-2 gap-4 lg:grid-cols-5">
       @for (i of skeletonKpis; track i) {
         <div class="skeleton-kpi-card bg-card rounded-lg border border-gray-200 p-4 shadow">
           <div class="skeleton-line w-3/4 mb-3"></div>
@@ -41,7 +41,7 @@
       }
     </div>
   } @else {
-    <div class="col-span-12 grid grid-cols-2 gap-4 lg:grid-cols-6">
+    <div class="col-span-12 grid grid-cols-2 gap-4 lg:grid-cols-5">
       @for (kpi of kpis(); track kpi.id) {
         <app-kpi-card [label]="kpi.label" [value]="kpi.value" [subLabel]="kpi.subLabel" />
       }
@@ -50,66 +50,81 @@
 
   <!-- Charts -->
   @if (loading()) {
-    <div class="col-span-12 lg:col-span-4">
+    <div class="col-span-12 lg:col-span-6">
       <div class="skeleton-chart-card bg-card rounded-lg border border-gray-200 p-4 shadow">
         <div class="skeleton-line w-2/5 mb-4"></div>
         <div class="skeleton-block"></div>
       </div>
     </div>
-    <div class="col-span-12 lg:col-span-4">
+    <div class="col-span-12 lg:col-span-6">
       <div class="skeleton-chart-card bg-card rounded-lg border border-gray-200 p-4 shadow">
         <div class="skeleton-line w-2/5 mb-4"></div>
         <div class="skeleton-block"></div>
       </div>
     </div>
-    <div class="col-span-12 lg:col-span-4">
+    <div class="col-span-12 lg:col-span-6">
+      <div class="skeleton-chart-card bg-card rounded-lg border border-gray-200 p-4 shadow">
+        <div class="skeleton-line w-2/5 mb-4"></div>
+        <div class="skeleton-block"></div>
+      </div>
+    </div>
+    <div class="col-span-12 lg:col-span-6">
       <div class="skeleton-chart-card bg-card rounded-lg border border-gray-200 p-4 shadow">
         <div class="skeleton-line w-2/5 mb-4"></div>
         <div class="skeleton-block"></div>
       </div>
     </div>
   } @else {
-    <div class="col-span-12 lg:col-span-4">
+    <div class="col-span-12 lg:col-span-6">
       <div class="bg-card chart-card rounded-lg border border-gray-200 p-4 shadow">
-        <div class="text-sm font-semibold">Consultas e veículos por dia</div>
+        <div class="flex items-center justify-between">
+          <div class="text-sm font-semibold">Evolução de consultas</div>
+          <mat-form-field class="dashboard-range-select" appearance="outline" subscriptSizing="dynamic">
+            <mat-select [value]="evolutionPeriod()" (selectionChange)="onEvolutionPeriodChange($event.value)">
+              <mat-option value="semanal">Semanal</mat-option>
+              <mat-option value="mensal">Mensal</mat-option>
+              <mat-option value="trimestral">Trimestral</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
         <div class="chart-content mt-4">
           <apx-chart
-            [chart]="queriesChart().chart"
-            [colors]="queriesChart().colors"
-            [dataLabels]="queriesChart().dataLabels"
-            [grid]="queriesChart().grid"
-            [legend]="queriesChart().legend"
-            [series]="queriesChart().series"
-            [stroke]="queriesChart().stroke"
-            [tooltip]="queriesChart().tooltip"
-            [xaxis]="queriesChart().xaxis"
-            [yaxis]="queriesChart().yaxis"
+            [chart]="evolutionChart().chart"
+            [colors]="evolutionChart().colors"
+            [dataLabels]="evolutionChart().dataLabels"
+            [grid]="evolutionChart().grid"
+            [legend]="evolutionChart().legend"
+            [series]="evolutionChart().series"
+            [stroke]="evolutionChart().stroke"
+            [tooltip]="evolutionChart().tooltip"
+            [xaxis]="evolutionChart().xaxis"
+            [yaxis]="evolutionChart().yaxis"
           ></apx-chart>
         </div>
       </div>
     </div>
 
-    <div class="col-span-12 lg:col-span-4">
+    <div class="col-span-12 lg:col-span-6">
       <div class="bg-card chart-card rounded-lg border border-gray-200 p-4 shadow">
-        <div class="text-sm font-semibold">Status das consultas</div>
+        <div class="text-sm font-semibold">Status dos veículos</div>
         <div class="chart-content chart-content--centered mt-4">
           <apx-chart
-            [chart]="statusChart().chart"
-            [colors]="statusChart().colors"
-            [dataLabels]="statusChart().dataLabels"
-            [labels]="statusChart().labels"
-            [legend]="statusChart().legend"
-            [plotOptions]="statusChart().plotOptions"
-            [series]="statusChart().series"
-            [stroke]="statusChart().stroke"
+            [chart]="vehicleStatusChart().chart"
+            [colors]="vehicleStatusChart().colors"
+            [dataLabels]="vehicleStatusChart().dataLabels"
+            [labels]="vehicleStatusChart().labels"
+            [legend]="vehicleStatusChart().legend"
+            [plotOptions]="vehicleStatusChart().plotOptions"
+            [series]="vehicleStatusChart().series"
+            [stroke]="vehicleStatusChart().stroke"
           ></apx-chart>
         </div>
       </div>
     </div>
 
-    <div class="col-span-12 lg:col-span-4">
+    <div class="col-span-12 lg:col-span-6">
       <div class="bg-card chart-card rounded-lg border border-gray-200 p-4 shadow">
-        <div class="text-sm font-semibold">Motivos de bloqueio</div>
+        <div class="text-sm font-semibold">Motivos dos bloqueios</div>
         <div class="chart-content mt-4">
           <apx-chart
             [chart]="blocksChart().chart"
@@ -121,6 +136,25 @@
             [tooltip]="blocksChart().tooltip"
             [xaxis]="blocksChart().xaxis"
             [yaxis]="blocksChart().yaxis"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-span-12 lg:col-span-6">
+      <div class="bg-card chart-card rounded-lg border border-gray-200 p-4 shadow">
+        <div class="text-sm font-semibold">Motivos dos alertas</div>
+        <div class="chart-content mt-4">
+          <apx-chart
+            [chart]="alertsChart().chart"
+            [colors]="alertsChart().colors"
+            [dataLabels]="alertsChart().dataLabels"
+            [grid]="alertsChart().grid"
+            [plotOptions]="alertsChart().plotOptions"
+            [series]="alertsChart().series"
+            [tooltip]="alertsChart().tooltip"
+            [xaxis]="alertsChart().xaxis"
+            [yaxis]="alertsChart().yaxis"
           ></apx-chart>
         </div>
       </div>

@@ -5,21 +5,35 @@ import { DashboardData } from '../models/client-dashboard.types';
 
 const MOCK_DATA: DashboardData = {
   kpis: [
-    { id: 'queries', label: 'Consultas no período', value: '2.482', subLabel: 'Últimos 30 dias' },
-    { id: 'vehicles', label: 'Veículos analisados', value: '18.904', subLabel: 'Últimos 30 dias' },
-    { id: 'unblocked', label: 'Liberados', value: '15.502', subLabel: 'Últimos 30 dias' },
-    { id: 'blocked', label: 'Bloqueados', value: '3.402', subLabel: 'Últimos 30 dias' },
-    { id: 'processing', label: 'Em processamento', value: '12', subLabel: 'Agora' },
-    { id: 'errors', label: 'Taxa de erro', value: '0,6%', subLabel: 'Últimos 30 dias' },
+    { id: 'consultados', label: 'Veículos Consultados', value: '18.904', subLabel: 'Últimos 30 dias' },
+    { id: 'liberados', label: 'Veículos Liberados', value: '14.210', subLabel: 'Últimos 30 dias' },
+    { id: 'liberados-alerta', label: 'Liberados com Alerta', value: '1.292', subLabel: 'Últimos 30 dias' },
+    { id: 'bloqueados', label: 'Veículos Bloqueados', value: '2.780', subLabel: 'Últimos 30 dias' },
+    { id: 'bloqueados-alerta', label: 'Bloqueados com Alerta', value: '622', subLabel: 'Últimos 30 dias' },
   ],
-  queriesChartSeries: [
-    { name: 'Consultas', data: [220, 260, 240, 320, 380, 360, 410] },
-    { name: 'Veículos', data: [1240, 980, 1320, 1460, 1620, 1540, 1710] },
-  ],
-  queriesChartCategories: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-  statusChartSeries: [78, 18, 4],
+  // Ordem: Liberado, Liberado com Alerta, Bloqueado com Alerta, Bloqueado
+  vehicleStatusSeries: [14210, 1292, 622, 2780],
   blocksChartSeries: [48, 31, 24, 18, 12],
   blocksChartCategories: ['PRF', 'Judicial', 'Roubo/Furto', 'Gravame', 'Recall'],
+  alertsChartSeries: [36, 29, 22, 15, 9],
+  alertsChartCategories: ['Recall', 'GNV', 'Licenciamento', 'CRLV', 'Gravame'],
+  evolutionByPeriod: {
+    semanal: {
+      categories: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+      atual: [220, 260, 240, 320, 380, 360, 410],
+      anterior: [190, 230, 210, 280, 340, 320, 360],
+    },
+    mensal: {
+      categories: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+      atual: [5200, 5480, 5100, 5620, 5900, 6100, 6350, 6200, 6480, 6700, 6900, 7100],
+      anterior: [4700, 4950, 4800, 5100, 5300, 5600, 5800, 5750, 5900, 6100, 6300, 6500],
+    },
+    trimestral: {
+      categories: ['T1', 'T2', 'T3', 'T4'],
+      atual: [15780, 17620, 19030, 20700],
+      anterior: [14450, 16000, 17250, 18900],
+    },
+  },
   unblockedByRegion: [
     { state: 'PR', volume: '4.820', fines: '312', alerts: '180' },
     { state: 'SP', volume: '5.210', fines: '428', alerts: '245' },

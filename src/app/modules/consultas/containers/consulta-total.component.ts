@@ -4,19 +4,16 @@ import { NgClass } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { PageMeta } from '@core/http';
 import { PageTitleComponent } from 'app/layout/common/page-title/page-title.component';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
 import {
   CONSULTA_VEHICLE_TABLE_COLUMNS,
   ConsultaVehicleTableComponent,
 } from '../components/consulta-vehicle-table.component';
 import { ConsultaFilterComponent } from '../components/consulta-filter.component';
-import { ConsultaFilter, ConsultaQueryType, ConsultaVehicleDto } from '../models/consulta.types';
+import { ConsultaFilter, ConsultaVehicleDto } from '../models/consulta.types';
 import { ConsultaService } from '../services/consulta.service';
-
-const QUERY_TYPE_LABELS: Record<ConsultaQueryType, string> = {
-  PRE_VENDA: 'Pré-venda',
-  TRIMESTRAL: 'Trimestral',
-  ESPECIAL: 'Especial',
-};
+import { HeaderBatchDialogService } from '@core/services/header-batch-dialog.service';
 
 @Component({
   selector: 'app-consulta-total',
@@ -26,16 +23,23 @@ const QUERY_TYPE_LABELS: Record<ConsultaQueryType, string> = {
     MatPaginator,
     NgClass,
     PageTitleComponent,
+    MatIcon,
+    MatButton,
   ],
   providers: [ConsultaService],
   template: `
-    <page-title [title]="pageTitle"></page-title>
+    <page-title [title]="pageTitle">
+      <button mat-flat-button class="ml-auto" style="background-color: #792181; color: #fff" (click)="openBatchDialog()">
+        <mat-icon svgIcon="heroicons_outline:plus"></mat-icon>
+        Nova Consulta
+      </button>
+    </page-title>
 
     <div class="mx-4 mb-4 flex flex-col bg-card rounded-lg shadow overflow-hidden grow">
       <app-consulta-filter
         class="w-full"
         [columns]="columnDefs"
-        [storageKey]="'consulta-' + (queryType ?? 'total') + '-columns'"
+        [storageKey]="storageKey"
         (filterChange)="onFilterChange($event)"
         (visibleColumnsChange)="visibleColumns.set($event)"
       />
@@ -70,9 +74,10 @@ const QUERY_TYPE_LABELS: Record<ConsultaQueryType, string> = {
 })
 export class ConsultaTotalComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly headerBatchDialogService = inject(HeaderBatchDialogService);
 
-  protected queryType: ConsultaQueryType | null = null;
   protected pageTitle = 'Consultas › Total';
+  protected storageKey = 'consulta-total-columns';
 
   protected readonly columnDefs = CONSULTA_VEHICLE_TABLE_COLUMNS;
   protected readonly visibleColumns = signal<string[]>(CONSULTA_VEHICLE_TABLE_COLUMNS.map((c) => c.key));
@@ -87,11 +92,8 @@ export class ConsultaTotalComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.queryType = this.route.snapshot.data['queryType'] ?? null;
-    if (this.queryType) {
-      this.pageTitle = `Consultas › Total › ${QUERY_TYPE_LABELS[this.queryType]}`;
-    }
-    this.consultaService.setQueryType(this.queryType);
+    this.pageTitle = this.route.snapshot.data['title'] ?? 'Consultas › Total';
+    this.storageKey = this.route.snapshot.data['storageKey'] ?? 'consulta-total-columns';
   }
 
   onFilterChange(filter: ConsultaFilter) {
@@ -100,5 +102,9 @@ export class ConsultaTotalComponent implements OnInit {
 
   onPageChange(event: PageEvent) {
     this.consultaService.setPage(event.pageIndex + 1, event.pageSize);
+  }
+
+  openBatchDialog() {
+    this.headerBatchDialogService.open();
   }
 }

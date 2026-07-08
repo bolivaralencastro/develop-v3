@@ -20,28 +20,8 @@ export const futuristicNavigation: FuseNavigationItem[] = [
       {
         id: 'consultas-total',
         title: 'Total',
-        type: 'collapsable',
-        icon: 'heroicons_outline:squares-2x2',
-        children: [
-          {
-            id: 'consultas-total-pre-venda',
-            title: 'Pré-venda',
-            type: 'basic',
-            link: '/consultas/total/pre-venda',
-          },
-          {
-            id: 'consultas-total-trimestral',
-            title: 'Trimestral',
-            type: 'basic',
-            link: '/consultas/total/trimestral',
-          },
-          {
-            id: 'consultas-total-especial',
-            title: 'Especial',
-            type: 'basic',
-            link: '/consultas/total/especial',
-          },
-        ],
+        type: 'basic',
+        link: '/consultas/total',
       },
       {
         id: 'consultas-situacao-veiculo',

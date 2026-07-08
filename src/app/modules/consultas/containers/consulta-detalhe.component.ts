@@ -4,6 +4,8 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
 import { PageMeta } from '@core/http';
 import { PageTitleComponent } from 'app/layout/common/page-title/page-title.component';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
 import {
   ConsultaDetalheFilterComponent,
   SituacaoOption,
@@ -19,6 +21,7 @@ import {
   ConsultaDetalheType,
   DETALHE_TITLES,
 } from '../models/consulta.types';
+import { HeaderBatchDialogService } from '@core/services/header-batch-dialog.service';
 
 const SITUACAO_OPTIONS: Partial<Record<ConsultaDetalheType, SituacaoOption[]>> = {
   RECALL: [
@@ -74,10 +77,17 @@ const SITUACAO_LABEL: Partial<Record<ConsultaDetalheType, string>> = {
     ConsultaDetalheTableComponent,
     MatPaginator,
     NgClass,
+    MatIcon,
+    MatButton,
   ],
   providers: [ConsultaDetalheService],
   template: `
-    <page-title [title]="pageTitle"></page-title>
+    <page-title [title]="pageTitle">
+      <button mat-flat-button class="ml-auto" style="background-color: #792181; color: #fff" (click)="openBatchDialog()">
+        <mat-icon svgIcon="heroicons_outline:plus"></mat-icon>
+        Nova Consulta
+      </button>
+    </page-title>
 
     <div class="mx-4 mb-4 flex flex-col bg-card rounded-lg shadow overflow-hidden grow">
       <app-consulta-detalhe-filter
@@ -121,6 +131,7 @@ const SITUACAO_LABEL: Partial<Record<ConsultaDetalheType, string>> = {
 })
 export class ConsultaDetalheComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly headerBatchDialogService = inject(HeaderBatchDialogService);
 
   protected consulType: ConsultaDetalheType = 'SITUACAO_VEICULO';
   protected pageTitle = '';
@@ -153,5 +164,9 @@ export class ConsultaDetalheComponent implements OnInit {
 
   onPageChange(event: PageEvent) {
     this.service.setPage(event.pageIndex + 1, event.pageSize);
+  }
+
+  openBatchDialog() {
+    this.headerBatchDialogService.open();
   }
 }
