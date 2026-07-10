@@ -4,10 +4,33 @@
       <span class="dashboard-welcome">Bem-vindo ao</span>
       <span class="dashboard-title-text">Develop</span>
     </h2>
-    <div class="dashboard-filter-row flex items-center gap-2 text-sm text-secondary">
+    <div class="dashboard-filter-row flex flex-wrap items-center gap-2 text-sm text-secondary">
+      @if (comparisonMode()) {
+        <mat-form-field class="dashboard-range-select" appearance="outline" subscriptSizing="dynamic">
+          <mat-select [value]="periodoA()" (selectionChange)="onComparativoPeriodoAChange($event.value)">
+            @for (opt of comparativoOptions(); track opt) {
+              <mat-option [value]="opt">{{ opt }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <span class="text-xs">vs</span>
+        <mat-form-field class="dashboard-range-select" appearance="outline" subscriptSizing="dynamic">
+          <mat-select [value]="periodoB()" (selectionChange)="onComparativoPeriodoBChange($event.value)">
+            @for (opt of comparativoOptions(); track opt) {
+              <mat-option [value]="opt">{{ opt }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+      <mat-form-field class="dashboard-range-select" appearance="outline" subscriptSizing="dynamic">
+        <mat-select [value]="comparisonMode() ? 'comparativo' : 'simples'" (selectionChange)="onComparisonModeChange($event.value)">
+          <mat-option value="simples">Sem comparativo</mat-option>
+          <mat-option value="comparativo">Comparativo de evolução</mat-option>
+        </mat-select>
+      </mat-form-field>
       <span class="dashboard-range-label">Período</span>
       <mat-form-field class="dashboard-range-select" appearance="outline" subscriptSizing="dynamic">
-        <mat-select [value]="preset" (selectionChange)="onPresetChange($event.value)">
+        <mat-select [value]="preset" (selectionChange)="onPresetChange($event.value)" [disabled]="comparisonMode()">
           <mat-option value="30">Últimos 30 dias</mat-option>
           <mat-option value="7">Últimos 7 dias</mat-option>
           <mat-option value="today">Hoje</mat-option>
@@ -79,33 +102,17 @@
       <div class="bg-card chart-card rounded-lg border border-gray-200 p-4 shadow">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div class="text-sm font-semibold">Evolução de consultas</div>
-          <div class="flex flex-wrap items-center gap-2">
-            @if (evolutionPeriod() === 'comparativo') {
-              <mat-form-field class="dashboard-range-select" appearance="outline" subscriptSizing="dynamic">
-                <mat-select [value]="periodoA()" (selectionChange)="onComparativoPeriodoAChange($event.value)">
-                  @for (opt of comparativoOptions(); track opt) {
-                    <mat-option [value]="opt">{{ opt }}</mat-option>
-                  }
-                </mat-select>
-              </mat-form-field>
-              <span class="text-xs text-secondary">vs</span>
-              <mat-form-field class="dashboard-range-select" appearance="outline" subscriptSizing="dynamic">
-                <mat-select [value]="periodoB()" (selectionChange)="onComparativoPeriodoBChange($event.value)">
-                  @for (opt of comparativoOptions(); track opt) {
-                    <mat-option [value]="opt">{{ opt }}</mat-option>
-                  }
-                </mat-select>
-              </mat-form-field>
-            }
+          @if (comparisonMode()) {
+            <span class="text-xs text-secondary">{{ periodoA() }} vs {{ periodoB() }}</span>
+          } @else {
             <mat-form-field class="dashboard-range-select" appearance="outline" subscriptSizing="dynamic">
               <mat-select [value]="evolutionPeriod()" (selectionChange)="onEvolutionPeriodChange($event.value)">
                 <mat-option value="semanal">Semanal</mat-option>
                 <mat-option value="mensal">Mensal</mat-option>
                 <mat-option value="trimestral">Trimestral</mat-option>
-                <mat-option value="comparativo">Comparativo de evolução</mat-option>
               </mat-select>
             </mat-form-field>
-          </div>
+          }
         </div>
         <div class="chart-content mt-4">
           <apx-chart
@@ -151,6 +158,7 @@
             [colors]="blocksChart().colors"
             [dataLabels]="blocksChart().dataLabels"
             [grid]="blocksChart().grid"
+            [legend]="blocksChart().legend"
             [plotOptions]="blocksChart().plotOptions"
             [series]="blocksChart().series"
             [tooltip]="blocksChart().tooltip"
@@ -170,6 +178,7 @@
             [colors]="alertsChart().colors"
             [dataLabels]="alertsChart().dataLabels"
             [grid]="alertsChart().grid"
+            [legend]="alertsChart().legend"
             [plotOptions]="alertsChart().plotOptions"
             [series]="alertsChart().series"
             [tooltip]="alertsChart().tooltip"

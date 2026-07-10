@@ -12,7 +12,7 @@ export interface KpiItem {
   subLabel: string;
 }
 
-export type EvolutionPeriod = 'semanal' | 'mensal' | 'trimestral' | 'comparativo';
+export type EvolutionPeriod = 'semanal' | 'mensal' | 'trimestral';
 
 export interface EvolutionSeries {
   categories: string[];
@@ -20,11 +20,19 @@ export interface EvolutionSeries {
   anterior: number[];
 }
 
-// Comparativo de evolução: dois períodos escolhidos pelo usuário, sobrepostos no mesmo gráfico
-export interface EvolutionComparativo {
+// Comparativo de evolução: modo global do dashboard que sobrepõe dois períodos
+// escolhidos pelo usuário nos KPIs, evolução e motivos (o donut permanece no período atual)
+export interface ComparisonPeriodData {
+  kpis: Record<string, number>;
+  evolution: number[];
+  blocks: number[];
+  alerts: number[];
+}
+
+export interface DashboardComparison {
   options: string[];
   categories: string[];
-  seriesByOption: Record<string, number[]>;
+  byOption: Record<string, ComparisonPeriodData>;
 }
 
 export interface DashboardData {
@@ -34,8 +42,8 @@ export interface DashboardData {
   blocksChartCategories: string[];
   alertsChartSeries: number[];
   alertsChartCategories: string[];
-  evolutionByPeriod: Record<Exclude<EvolutionPeriod, 'comparativo'>, EvolutionSeries>;
-  evolutionComparativo: EvolutionComparativo;
+  evolutionByPeriod: Record<EvolutionPeriod, EvolutionSeries>;
+  comparison: DashboardComparison;
   unblockedByRegion: RegionRow[];
   blockedByRegion: RegionRow[];
 }

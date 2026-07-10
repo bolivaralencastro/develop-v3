@@ -34,16 +34,47 @@ const MOCK_DATA: DashboardData = {
       anterior: [14450, 16000, 17250, 18900],
     },
   },
-  evolutionComparativo: {
+  // kpis por id (mesma ordem dos cards), blocks/alerts na ordem das categorias dos gráficos de motivos
+  comparison: {
     options: ['Fevereiro/2026', 'Março/2026', 'Abril/2026', 'Maio/2026', 'Junho/2026', 'Julho/2026'],
     categories: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-    seriesByOption: {
-      'Fevereiro/2026': [1180, 1290, 1350, 1428],
-      'Março/2026': [1240, 1310, 1465, 1520],
-      'Abril/2026': [1305, 1420, 1490, 1605],
-      'Maio/2026': [1380, 1455, 1570, 1660],
-      'Junho/2026': [1410, 1530, 1615, 1745],
-      'Julho/2026': [1480, 1590, 1680, 1820],
+    byOption: {
+      'Fevereiro/2026': {
+        kpis: { 'consultados': 15200, 'liberados': 11400, 'liberados-alerta': 1010, 'bloqueados': 2290, 'bloqueados-alerta': 500 },
+        evolution: [1180, 1290, 1350, 1428],
+        blocks: [39, 25, 20, 15, 10],
+        alerts: [30, 24, 18, 12, 7],
+      },
+      'Março/2026': {
+        kpis: { 'consultados': 15900, 'liberados': 11950, 'liberados-alerta': 1060, 'bloqueados': 2400, 'bloqueados-alerta': 522 },
+        evolution: [1240, 1310, 1465, 1520],
+        blocks: [41, 26, 21, 15, 10],
+        alerts: [31, 25, 19, 13, 8],
+      },
+      'Abril/2026': {
+        kpis: { 'consultados': 16600, 'liberados': 12480, 'liberados-alerta': 1105, 'bloqueados': 2510, 'bloqueados-alerta': 546 },
+        evolution: [1305, 1420, 1490, 1605],
+        blocks: [43, 28, 21, 16, 11],
+        alerts: [33, 26, 20, 13, 8],
+      },
+      'Maio/2026': {
+        kpis: { 'consultados': 17400, 'liberados': 13100, 'liberados-alerta': 1160, 'bloqueados': 2620, 'bloqueados-alerta': 570 },
+        evolution: [1380, 1455, 1570, 1660],
+        blocks: [45, 29, 22, 17, 11],
+        alerts: [34, 27, 21, 14, 8],
+      },
+      'Junho/2026': {
+        kpis: { 'consultados': 18100, 'liberados': 13620, 'liberados-alerta': 1225, 'bloqueados': 2700, 'bloqueados-alerta': 595 },
+        evolution: [1410, 1530, 1615, 1745],
+        blocks: [46, 30, 23, 17, 12],
+        alerts: [35, 28, 21, 14, 9],
+      },
+      'Julho/2026': {
+        kpis: { 'consultados': 18904, 'liberados': 14210, 'liberados-alerta': 1292, 'bloqueados': 2780, 'bloqueados-alerta': 622 },
+        evolution: [1480, 1590, 1680, 1820],
+        blocks: [48, 31, 24, 18, 12],
+        alerts: [36, 29, 22, 15, 9],
+      },
     },
   },
   unblockedByRegion: [

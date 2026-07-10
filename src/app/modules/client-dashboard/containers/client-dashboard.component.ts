@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { KpiCardComponent } from '../components/kpi-card.component';
 import { RegionTableComponent } from '../components/region-table.component';
 import { ClientDashboardService } from '../services/client-dashboard.service';
-import { EvolutionPeriod } from '../models/client-dashboard.types';
+import { ComparisonPeriodData, DashboardData, EvolutionPeriod } from '../models/client-dashboard.types';
 
 @Component({
   selector: 'app-client-dashboard',
@@ -35,18 +35,45 @@ export class ClientDashboardComponent implements OnInit {
   private readonly dashboardService = inject(ClientDashboardService);
 
   protected readonly loading = this.dashboardService.loading;
-  protected readonly kpis = computed(() => this.dashboardService.data()?.kpis ?? []);
   protected readonly unblockedByRegion = computed(() => this.dashboardService.data()?.unblockedByRegion ?? []);
   protected readonly blockedByRegion = computed(() => this.dashboardService.data()?.blockedByRegion ?? []);
 
   protected readonly evolutionPeriod = signal<EvolutionPeriod>('semanal');
 
-  // Comparativo de evolução: dois períodos escolhidos pelo usuário, sobrepostos
-  protected readonly comparativoOptions = computed(() => this.dashboardService.data()?.evolutionComparativo.options ?? []);
+  // Comparativo de evolução: modo global do dashboard — KPIs, evolução e motivos
+  // passam a comparar os dois períodos escolhidos no cabeçalho
+  protected readonly comparisonMode = signal(false);
+  protected readonly comparativoOptions = computed(() => this.dashboardService.data()?.comparison.options ?? []);
   private readonly comparativoPeriodoA = signal<string | null>(null);
   private readonly comparativoPeriodoB = signal<string | null>(null);
   protected readonly periodoA = computed(() => this.comparativoPeriodoA() ?? this.comparativoOptions().at(-1) ?? '');
   protected readonly periodoB = computed(() => this.comparativoPeriodoB() ?? this.comparativoOptions().at(-2) ?? '');
+
+  protected readonly kpis = computed(() => {
+    const data = this.dashboardService.data();
+    if (!data) {
+      return [];
+    }
+    const a = data.comparison.byOption[this.periodoA()];
+    const b = data.comparison.byOption[this.periodoB()];
+    if (!this.comparisonMode() || !a || !b) {
+      return data.kpis;
+    }
+    return data.kpis.map((kpi) => {
+      const valorA = a.kpis[kpi.id];
+      const valorB = b.kpis[kpi.id];
+      if (valorA === undefined || !valorB) {
+        return kpi;
+      }
+      const delta = ((valorA - valorB) / valorB) * 100;
+      const sinal = delta >= 0 ? '+' : '';
+      return {
+        ...kpi,
+        value: valorA.toLocaleString('pt-BR'),
+        subLabel: `vs ${this.periodoB()}: ${sinal}${delta.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`,
+      };
+    });
+  });
 
   protected readonly evolutionChart = computed<ApexOptions>(() => {
     const data = this.dashboardService.data();
@@ -65,15 +92,15 @@ export class ClientDashboardComponent implements OnInit {
       yaxis: { labels: { style: { colors: 'var(--fuse-text-secondary)' } } },
     };
 
-    if (this.evolutionPeriod() === 'comparativo') {
-      const { categories, seriesByOption } = data.evolutionComparativo;
+    if (this.comparisonMode()) {
+      const { categories, byOption } = data.comparison;
       const periodoA = this.periodoA();
       const periodoB = this.periodoB();
       return {
         ...base,
         series: [
-          { name: periodoA, data: seriesByOption[periodoA] ?? [] },
-          { name: periodoB, data: seriesByOption[periodoB] ?? [] },
+          { name: periodoA, data: byOption[periodoA]?.evolution ?? [] },
+          { name: periodoB, data: byOption[periodoB]?.evolution ?? [] },
         ],
         xaxis: {
           categories,
@@ -82,7 +109,7 @@ export class ClientDashboardComponent implements OnInit {
       };
     }
 
-    const series = data.evolutionByPeriod[this.evolutionPeriod() as Exclude<EvolutionPeriod, 'comparativo'>];
+    const series = data.evolutionByPeriod[this.evolutionPeriod()];
     return {
       ...base,
       series: [
@@ -114,52 +141,57 @@ export class ClientDashboardComponent implements OnInit {
     };
   });
 
-  protected readonly blocksChart = computed<ApexOptions>(() => {
+  protected readonly blocksChart = computed<ApexOptions>(() =>
+    this.buildMotivosChart('#dc2626', '#fca5a5', 'Bloqueios', (d) => d.blocksChartSeries, (d) => d.blocksChartCategories, (c) => c.blocks));
+
+  protected readonly alertsChart = computed<ApexOptions>(() =>
+    this.buildMotivosChart('#f59e0b', '#fcd34d', 'Alertas', (d) => d.alertsChartSeries, (d) => d.alertsChartCategories, (c) => c.alerts));
+
+  private buildMotivosChart(
+    cor: string,
+    corComparacao: string,
+    nomeSerie: string,
+    serieAtual: (d: DashboardData) => number[],
+    categorias: (d: DashboardData) => string[],
+    serieComparacao: (c: ComparisonPeriodData) => number[],
+  ): ApexOptions {
     const data = this.dashboardService.data();
     if (!data) {
       return {};
     }
 
+    const a = data.comparison.byOption[this.periodoA()];
+    const b = data.comparison.byOption[this.periodoB()];
+    const comparando = this.comparisonMode() && a && b;
+
     return {
       chart: { type: 'bar', height: 300, width: '100%', toolbar: { show: false }, fontFamily: 'inherit' },
-      colors: ['#dc2626'],
+      colors: comparando ? [cor, corComparacao] : [cor],
       dataLabels: { enabled: false },
       grid: { borderColor: 'var(--fuse-border)', padding: { left: 0, right: 0 } },
-      plotOptions: { bar: { horizontal: true, barHeight: '55%', borderRadius: 4 } },
-      series: [{ name: 'Bloqueios', data: data.blocksChartSeries }],
+      legend: { position: 'bottom' },
+      plotOptions: { bar: { horizontal: true, barHeight: comparando ? '70%' : '55%', borderRadius: 4 } },
+      series: comparando
+        ? [
+            { name: this.periodoA(), data: serieComparacao(a) },
+            { name: this.periodoB(), data: serieComparacao(b) },
+          ]
+        : [{ name: nomeSerie, data: serieAtual(data) }],
       tooltip: { theme: 'dark' },
       xaxis: {
-        categories: data.blocksChartCategories,
+        categories: categorias(data),
         labels: { style: { colors: 'var(--fuse-text-secondary)' } },
       },
       yaxis: { labels: { style: { colors: 'var(--fuse-text-secondary)', fontSize: '11px' } } },
     };
-  });
-
-  protected readonly alertsChart = computed<ApexOptions>(() => {
-    const data = this.dashboardService.data();
-    if (!data) {
-      return {};
-    }
-
-    return {
-      chart: { type: 'bar', height: 300, width: '100%', toolbar: { show: false }, fontFamily: 'inherit' },
-      colors: ['#f59e0b'],
-      dataLabels: { enabled: false },
-      grid: { borderColor: 'var(--fuse-border)', padding: { left: 0, right: 0 } },
-      plotOptions: { bar: { horizontal: true, barHeight: '55%', borderRadius: 4 } },
-      series: [{ name: 'Alertas', data: data.alertsChartSeries }],
-      tooltip: { theme: 'dark' },
-      xaxis: {
-        categories: data.alertsChartCategories,
-        labels: { style: { colors: 'var(--fuse-text-secondary)' } },
-      },
-      yaxis: { labels: { style: { colors: 'var(--fuse-text-secondary)', fontSize: '11px' } } },
-    };
-  });
+  }
 
   protected onEvolutionPeriodChange(period: EvolutionPeriod) {
     this.evolutionPeriod.set(period);
+  }
+
+  protected onComparisonModeChange(mode: string) {
+    this.comparisonMode.set(mode === 'comparativo');
   }
 
   protected onComparativoPeriodoAChange(periodo: string) {
