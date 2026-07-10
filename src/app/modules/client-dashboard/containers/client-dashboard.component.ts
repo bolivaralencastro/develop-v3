@@ -41,30 +41,58 @@ export class ClientDashboardComponent implements OnInit {
 
   protected readonly evolutionPeriod = signal<EvolutionPeriod>('semanal');
 
+  // Comparativo de evolução: dois períodos escolhidos pelo usuário, sobrepostos
+  protected readonly comparativoOptions = computed(() => this.dashboardService.data()?.evolutionComparativo.options ?? []);
+  private readonly comparativoPeriodoA = signal<string | null>(null);
+  private readonly comparativoPeriodoB = signal<string | null>(null);
+  protected readonly periodoA = computed(() => this.comparativoPeriodoA() ?? this.comparativoOptions().at(-1) ?? '');
+  protected readonly periodoB = computed(() => this.comparativoPeriodoB() ?? this.comparativoOptions().at(-2) ?? '');
+
   protected readonly evolutionChart = computed<ApexOptions>(() => {
     const data = this.dashboardService.data();
     if (!data) {
       return {};
     }
-    const series = data.evolutionByPeriod[this.evolutionPeriod()];
 
-    return {
+    const base: ApexOptions = {
       chart: { type: 'line', height: 300, toolbar: { show: false }, fontFamily: 'inherit' },
       colors: ['#0f172a', '#94a3b8'],
       dataLabels: { enabled: false },
       grid: { borderColor: 'var(--fuse-border)', padding: { left: 4, right: 4 } },
       legend: { position: 'bottom' },
+      stroke: { width: 3, curve: 'smooth' },
+      tooltip: { theme: 'dark' },
+      yaxis: { labels: { style: { colors: 'var(--fuse-text-secondary)' } } },
+    };
+
+    if (this.evolutionPeriod() === 'comparativo') {
+      const { categories, seriesByOption } = data.evolutionComparativo;
+      const periodoA = this.periodoA();
+      const periodoB = this.periodoB();
+      return {
+        ...base,
+        series: [
+          { name: periodoA, data: seriesByOption[periodoA] ?? [] },
+          { name: periodoB, data: seriesByOption[periodoB] ?? [] },
+        ],
+        xaxis: {
+          categories,
+          labels: { style: { colors: 'var(--fuse-text-secondary)' } },
+        },
+      };
+    }
+
+    const series = data.evolutionByPeriod[this.evolutionPeriod() as Exclude<EvolutionPeriod, 'comparativo'>];
+    return {
+      ...base,
       series: [
         { name: 'Período atual', data: series.atual },
         { name: 'Período anterior', data: series.anterior },
       ],
-      stroke: { width: 3, curve: 'smooth' },
-      tooltip: { theme: 'dark' },
       xaxis: {
         categories: series.categories,
         labels: { style: { colors: 'var(--fuse-text-secondary)' } },
       },
-      yaxis: { labels: { style: { colors: 'var(--fuse-text-secondary)' } } },
     };
   });
 
@@ -76,9 +104,9 @@ export class ClientDashboardComponent implements OnInit {
 
     return {
       chart: { type: 'donut', height: 300, width: '100%' },
-      colors: ['#16a34a', '#f59e0b', '#ea580c', '#dc2626'],
+      colors: ['#64748b', '#16a34a', '#f59e0b', '#ea580c', '#dc2626'],
       dataLabels: { enabled: false },
-      labels: ['Liberado', 'Liberado com Alerta', 'Bloqueado com Alerta', 'Bloqueado'],
+      labels: ['Outros — erro de importação', 'Liberado', 'Liberado com Alerta', 'Bloqueado com Alerta', 'Bloqueado'],
       legend: { position: 'bottom' },
       plotOptions: { pie: { donut: { size: '70%' } } },
       series: data.vehicleStatusSeries,
@@ -132,6 +160,14 @@ export class ClientDashboardComponent implements OnInit {
 
   protected onEvolutionPeriodChange(period: EvolutionPeriod) {
     this.evolutionPeriod.set(period);
+  }
+
+  protected onComparativoPeriodoAChange(periodo: string) {
+    this.comparativoPeriodoA.set(periodo);
+  }
+
+  protected onComparativoPeriodoBChange(periodo: string) {
+    this.comparativoPeriodoB.set(periodo);
   }
 
   protected readonly range = new FormGroup({

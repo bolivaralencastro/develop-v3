@@ -23,50 +23,45 @@ import {
 } from '../models/consulta.types';
 import { HeaderBatchDialogService } from '@core/services/header-batch-dialog.service';
 
+// As opções devem casar com os valores reais do campo filtrado (SITUACAO_FIELD no service),
+// senão o filtro sempre retorna vazio. Telas cujo campo só tem um valor não exibem filtro.
 const SITUACAO_OPTIONS: Partial<Record<ConsultaDetalheType, SituacaoOption[]>> = {
+  SITUACAO_VEICULO: [
+    { value: 'BLOQUEADO', label: 'Bloqueado' },
+    { value: 'LIBERADO', label: 'Liberado' },
+  ],
   RECALL: [
-    { value: 'SEM RECALL', label: 'Sem Recall' },
-    { value: 'COM RECALL', label: 'Com Recall' },
+    { value: 'VENCIDO', label: 'Vencido' },
+    { value: 'ATE 4 MESES', label: 'Até 4 meses' },
+    { value: 'MAIS DE 4 MESES', label: 'Mais de 4 meses' },
+    { value: 'N/C', label: 'Sem recall' },
   ],
   GNV: [
-    { value: 'N/A', label: 'Sem GNV' },
-    { value: 'VÁLIDO', label: 'Válido' },
     { value: 'VENCIDO', label: 'Vencido' },
+    { value: 'ATE 4 MESES', label: 'Até 4 meses' },
+    { value: 'MAIS DE 4 MESES', label: 'Mais de 4 meses' },
   ],
   GRAVAME: [
-    { value: 'SEM GRAVAME', label: 'Sem Gravame' },
-    { value: 'COM GRAVAME', label: 'Com Gravame' },
-  ],
-  PROPRIETARIO: [
-    { value: 'REGULAR', label: 'Regular' },
-    { value: 'PENDENTE', label: 'Pendente' },
-    { value: 'IRREGULAR', label: 'Irregular' },
+    { value: 'ALERTA', label: 'Alerta' },
+    { value: 'LIBERADO', label: 'Liberado' },
   ],
   CRLV: [
-    { value: 'EMITIDO', label: 'Emitido' },
-    { value: 'PENDENTE', label: 'Pendente' },
-  ],
-  IPVA: [
-    { value: 'QUITADO', label: 'Quitado' },
-    { value: 'PENDENTE', label: 'Pendente' },
-    { value: 'PARCELADO', label: 'Parcelado' },
-    { value: 'ISENTO', label: 'Isento' },
+    { value: 'ALERTA', label: 'Alerta' },
+    { value: 'LIBERADO', label: 'Liberado' },
   ],
   LICENCIAMENTO: [
-    { value: 'QUITADO', label: 'Quitado' },
-    { value: 'PENDENTE', label: 'Pendente' },
-    { value: 'ISENTO', label: 'Isento' },
+    { value: 'ALERTA', label: 'Alerta' },
+    { value: 'LIBERADO', label: 'Liberado' },
   ],
 };
 
 const SITUACAO_LABEL: Partial<Record<ConsultaDetalheType, string>> = {
-  RECALL: 'Recall',
-  GNV: 'GNV',
-  GRAVAME: 'Gravame',
-  PROPRIETARIO: 'Situação',
-  CRLV: 'CRLV',
-  IPVA: 'IPVA',
-  LICENCIAMENTO: 'Licenciamento',
+  SITUACAO_VEICULO: 'Status',
+  RECALL: 'Situação Recall',
+  GNV: 'Situação CSV',
+  GRAVAME: 'Status',
+  CRLV: 'Status',
+  LICENCIAMENTO: 'Status',
 };
 
 @Component({

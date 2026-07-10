@@ -77,15 +77,35 @@
   } @else {
     <div class="col-span-12 lg:col-span-6">
       <div class="bg-card chart-card rounded-lg border border-gray-200 p-4 shadow">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-wrap items-center justify-between gap-2">
           <div class="text-sm font-semibold">Evolução de consultas</div>
-          <mat-form-field class="dashboard-range-select" appearance="outline" subscriptSizing="dynamic">
-            <mat-select [value]="evolutionPeriod()" (selectionChange)="onEvolutionPeriodChange($event.value)">
-              <mat-option value="semanal">Semanal</mat-option>
-              <mat-option value="mensal">Mensal</mat-option>
-              <mat-option value="trimestral">Trimestral</mat-option>
-            </mat-select>
-          </mat-form-field>
+          <div class="flex flex-wrap items-center gap-2">
+            @if (evolutionPeriod() === 'comparativo') {
+              <mat-form-field class="dashboard-range-select" appearance="outline" subscriptSizing="dynamic">
+                <mat-select [value]="periodoA()" (selectionChange)="onComparativoPeriodoAChange($event.value)">
+                  @for (opt of comparativoOptions(); track opt) {
+                    <mat-option [value]="opt">{{ opt }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              <span class="text-xs text-secondary">vs</span>
+              <mat-form-field class="dashboard-range-select" appearance="outline" subscriptSizing="dynamic">
+                <mat-select [value]="periodoB()" (selectionChange)="onComparativoPeriodoBChange($event.value)">
+                  @for (opt of comparativoOptions(); track opt) {
+                    <mat-option [value]="opt">{{ opt }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            }
+            <mat-form-field class="dashboard-range-select" appearance="outline" subscriptSizing="dynamic">
+              <mat-select [value]="evolutionPeriod()" (selectionChange)="onEvolutionPeriodChange($event.value)">
+                <mat-option value="semanal">Semanal</mat-option>
+                <mat-option value="mensal">Mensal</mat-option>
+                <mat-option value="trimestral">Trimestral</mat-option>
+                <mat-option value="comparativo">Comparativo de evolução</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
         </div>
         <div class="chart-content mt-4">
           <apx-chart

@@ -15,48 +15,50 @@ const BASE_COLUMNS: TableColumnDef[] = [
   { key: 'chassi', label: 'Chassi' }, { key: 'estado', label: 'Estado' },
 ];
 
+// Ordem das colunas espelha 1:1 as abas da planilha "MENU CONSULTAS 2 - REVISADO 09.07.26":
+// Placa, Renavam, Chassi, Estado, Status, ...dados, com a coluna de situação por último.
 export const DETALHE_COLUMN_DEFS: Record<ConsultaDetalheType, TableColumnDef[]> = {
   SITUACAO_VEICULO: [
-    STATUS_COLUMN,
     ...BASE_COLUMNS,
+    STATUS_COLUMN,
     { key: 'descricaoSituacao', label: 'Situação Veículo' },
   ],
   RECALL: [
-    STATUS_COLUMN,
-    { key: 'situacaoRecall', label: 'Situação Recall' },
     ...BASE_COLUMNS,
+    STATUS_COLUMN,
     { key: 'recall', label: 'Recall' }, { key: 'descricaoRecall', label: 'Descrição' },
     { key: 'dataRegistroRecall', label: 'Data Registro' }, { key: 'dataLimiteRecall', label: 'Data Limite' },
+    { key: 'situacaoRecall', label: 'Situação Recall' },
   ],
   GNV: [
-    STATUS_COLUMN,
-    { key: 'situacaoGnv', label: 'Situação CSV' },
     ...BASE_COLUMNS,
+    STATUS_COLUMN,
     { key: 'ultimoLaudoGnv', label: 'Último Laudo CSV' }, { key: 'prazoRegularizacaoGnv', label: 'Prazo para Regularização' },
+    { key: 'situacaoGnv', label: 'Situação CSV' },
   ],
   GRAVAME: [
-    STATUS_COLUMN,
     ...BASE_COLUMNS,
+    STATUS_COLUMN,
     { key: 'gravame', label: 'Gravame' },
   ],
   PROPRIETARIO: [
-    STATUS_COLUMN,
     ...BASE_COLUMNS,
+    STATUS_COLUMN,
     { key: 'nomeProprietario', label: 'Proprietário' }, { key: 'cpfCnpj', label: 'CPF / CNPJ' },
   ],
   CRLV: [
-    STATUS_COLUMN,
     ...BASE_COLUMNS,
+    STATUS_COLUMN,
     { key: 'ultimoLicenciamento', label: 'Último Licenciamento' },
   ],
   IPVA: [
-    STATUS_COLUMN,
     ...BASE_COLUMNS,
+    STATUS_COLUMN,
     { key: 'valorIpva', label: 'IPVA' },
   ],
   LICENCIAMENTO: [
-    STATUS_COLUMN,
     ...BASE_COLUMNS,
+    STATUS_COLUMN,
     { key: 'taxaLicenciamento', label: 'Licenciamento' },
   ],
 };
@@ -65,6 +67,8 @@ const STATUS_COLORS: Record<string, string> = {
   // Situação Recall / GNV
   'VÁLIDO': 'bg-green-100 text-green-700',
   'VENCIDO': 'bg-red-100 text-red-700',
+  'ATE 4 MESES': 'bg-amber-100 text-amber-700',
+  'MAIS DE 4 MESES': 'bg-amber-100 text-amber-700',
   'N/A': 'bg-gray-100 text-gray-400',
   'N/C': 'bg-gray-100 text-gray-400',
 };
@@ -72,6 +76,8 @@ const STATUS_COLORS: Record<string, string> = {
 const STATUS_TOOLTIP: Record<string, string> = {
   'VÁLIDO': 'Dentro da validade',
   'VENCIDO': 'Vencido — regularização necessária',
+  'ATE 4 MESES': 'Vence em até 4 meses — atenção',
+  'MAIS DE 4 MESES': 'Vence em mais de 4 meses',
   'N/A': 'Não aplicável',
   'N/C': 'Não consta',
 };
